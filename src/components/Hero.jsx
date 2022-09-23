@@ -21,7 +21,7 @@ const Hero = () => {
           justifyContent="center"
           flex={3}
           gap={3}
-          textAlign={{ sm: 'center', md: 'start' }}
+          textAlign={{ xs: 'center', md: 'start' }}
         >
           <Typography
             variant="h4"
@@ -65,7 +65,7 @@ const Hero = () => {
         component="img"
         src={BannerImage}
         sx={{
-          display: { sm: 'none', md: 'block' },
+          display: { xs: 'none', md: 'block' },
           width: 2 / 5,
         }}
       ></Box>
