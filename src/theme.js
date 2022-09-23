@@ -24,7 +24,11 @@ export default createTheme({
     },
     cultured: {
       main: '#F2F2F2',
-      contrastText: '000814',
+      contrastText: '#000814',
+    },
+    black: {
+      main: '#000000',
+      contrastText: '#FFFFFF',
     },
     text: {
       primary: '#000814',
