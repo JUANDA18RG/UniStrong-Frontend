@@ -8,11 +8,13 @@ import Footer from './components/Footer';
 
 const App = () => {
   return (
-    <Container>
+    <>
       <Navbar />
-      <Outlet />
+      <Container>
+        <Outlet />
+      </Container>
       <Footer />
-    </Container>
+    </>
   );
 };
 
