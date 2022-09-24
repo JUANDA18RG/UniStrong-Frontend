@@ -20,13 +20,13 @@ const Hero = () => {
         <Stack
           justifyContent="center"
           flex={3}
-          gap={3}
+          spacing={3}
           textAlign={{ xs: 'center', md: 'start' }}
         >
           <Typography
-            variant="h4"
-            component="p"
-            color="cultured.main"
+            variant="h3"
+            component="h1"
+            color="redRYB.main"
             fontWeight={300}
           >
             Fitness Club
