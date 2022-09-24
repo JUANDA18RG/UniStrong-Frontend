@@ -9,7 +9,7 @@ const Hero = () => {
       justifyContent="space-around"
       alignItems="center"
       color="common.white"
-      minHeight={{ xs: 'calc(100vh - 70px)', sm: 'calc(100vh - 80px)' }}
+      height="100%"
     >
       <Stack
         alignSelf="stretch"
