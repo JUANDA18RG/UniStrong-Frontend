@@ -17,12 +17,7 @@ const Hero = () => {
         alignItems="center"
         position="relative"
       >
-        <Stack
-          justifyContent="center"
-          flex={3}
-          spacing={3}
-          textAlign={{ xs: 'center', md: 'start' }}
-        >
+        <Stack justifyContent="center" flex={3} spacing={3} textAlign="center">
           <Typography
             variant="h3"
             component="h1"
