@@ -20,7 +20,7 @@ root.render(
           <Route path="/" element={<App />}>
             <Route index element={<Home />} />
             <Route path="exercises" element={<Exercises />} />
-            <Route path="exercises/exercise/:id" element={<ExerciseDetail />} />
+            <Route path="exercises/:id" element={<ExerciseDetail />} />
             <Route path="dashboard" element={<Dashboard />} />
           </Route>
         </Routes>
