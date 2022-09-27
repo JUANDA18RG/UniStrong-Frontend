@@ -17,16 +17,32 @@ const Hero = () => {
         alignItems="center"
         position="relative"
       >
-        <Stack justifyContent="center" flex={3} spacing={3} textAlign="center">
+        <Stack flex={3} justifyContent="center" spacing={3} textAlign="center">
           <Typography
             variant="h3"
             component="h1"
             color="redRYB.main"
-            fontWeight={300}
+            sx={(theme) => ({
+              fontSize: {
+                xs: theme.typography.h4.fontSize,
+                sm: theme.typography.h3.fontSize,
+              },
+              fontWeight: 300,
+            })}
           >
             Fitness Club
           </Typography>
-          <Typography variant="h2" component="p">
+          <Typography
+            variant="h2"
+            component="p"
+            sx={(theme) => ({
+              fontSize: {
+                xs: theme.typography.h3.fontSize,
+                sm: theme.typography.h2.fontSize,
+              },
+              fontWeight: 300,
+            })}
+          >
             Sweat, Smile <br /> and Repeat
           </Typography>
           <Typography
@@ -44,13 +60,12 @@ const Hero = () => {
             to="/exercises"
             variant="contained"
             color="redPigment"
-            sx={{
-              height: 1 / 3,
-              width: 8 / 10,
+            sx={(theme) => ({
+              padding: theme.spacing(1.5, 5),
               fontSize: 18,
               fontWeight: 400,
               letterSpacing: 1.5,
-            }}
+            })}
           >
             Explore Exercises
           </Button>
