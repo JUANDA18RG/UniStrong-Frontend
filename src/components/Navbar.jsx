@@ -1,15 +1,43 @@
-import { Button, Container, Stack, Typography } from '@mui/material';
-import { Link, NavLink } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import {
+  Button,
+  Container,
+  IconButton,
+  Modal,
+  Stack,
+  styled,
+  Typography,
+} from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 import Logo from '../assets/images/Logo.png';
 
+const ModalNavButton = styled(Button)(({ theme }) => ({
+  borderBottom: '3px solid transparent',
+  fontSize: 28,
+  fontWeight: 300,
+  transition: theme.transitions.create('transform'),
+  '&:hover': {
+    transform: 'scale(1.1)',
+  },
+}));
+
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const activeRoutes = {
+    home: location.pathname === '/',
+    exercises: location.pathname === '/exercises',
+    dashboard: location.pathname === '/dashboard',
+  };
+
   return (
-    <Container sx={{ height: 80, py: 1 }}>
+    <Container sx={{ height: { xs: 70, sm: 80 }, py: { xs: 1 / 2, sm: 1 } }}>
       <Stack
         direction="row"
+        justifyContent={{ xs: 'space-between', sm: 'flex-start' }}
         alignItems="center"
-        justifyContent="flex-start"
-        gap={5}
+        spacing={{ xs: 1, sm: 5 }}
       >
         <Button component={Link} to="/" color="richBlack">
           <Stack
@@ -29,17 +57,22 @@ const Navbar = () => {
             </Typography>
           </Stack>
         </Button>
-        <Stack direction="row" alignItems="center" gap={1}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={1}
+          display={{ xs: 'none', sm: 'block' }}
+        >
           <Button
             component={NavLink}
             to="/"
             color="richBlack"
             sx={{
-              borderBottom: '3px solid transparent',
+              borderBottom: 3,
+              borderBottomColor: activeRoutes.home
+                ? 'redRYB.main'
+                : 'transparent',
             }}
-            style={({ isActive }) => ({
-              borderBottom: isActive && '3px solid #FF2625',
-            })}
             end
           >
             Home
@@ -49,12 +82,11 @@ const Navbar = () => {
             to="/exercises"
             color="richBlack"
             sx={{
-              borderBottom: '3px solid transparent',
+              borderBottom: 3,
+              borderBottomColor: activeRoutes.exercises
+                ? 'redRYB.main'
+                : 'transparent',
             }}
-            style={({ isActive }) => ({
-              borderBottom: isActive && '3px solid #FF2625',
-            })}
-            end
           >
             Exercises
           </Button>
@@ -63,16 +95,78 @@ const Navbar = () => {
             to="/dashboard"
             color="richBlack"
             sx={{
-              borderBottom: '3px solid transparent',
+              borderBottom: 3,
+              borderBottomColor: activeRoutes.dashboard
+                ? 'redRYB.main'
+                : 'transparent',
             }}
-            style={({ isActive }) => ({
-              borderBottom: isActive && '3px solid #FF2625',
-            })}
-            end
           >
             Dashboard
           </Button>
         </Stack>
+        <IconButton
+          onClick={() => setIsOpen(true)}
+          color="richBlack"
+          size="large"
+          sx={{
+            display: { sm: 'none' },
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Modal
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          sx={{
+            bgcolor: 'rgba(33, 33, 33, 0.7)',
+            backdropFilter: 'blur(4px)',
+          }}
+        >
+          <Stack
+            spacing={5}
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <ModalNavButton
+              component={NavLink}
+              to="/"
+              onClick={() => setIsOpen(false)}
+              color="cultured"
+              sx={{
+                borderBottomColor: activeRoutes.home && 'redRYB.main',
+              }}
+              end
+            >
+              Home
+            </ModalNavButton>
+            <ModalNavButton
+              component={NavLink}
+              to="/exercises"
+              onClick={() => setIsOpen(false)}
+              color="cultured"
+              sx={{
+                borderBottomColor: activeRoutes.exercises && 'redRYB.main',
+              }}
+            >
+              Exercises
+            </ModalNavButton>
+            <ModalNavButton
+              component={NavLink}
+              to="/dashboard"
+              onClick={() => setIsOpen(false)}
+              color="cultured"
+              sx={{
+                borderBottomColor: activeRoutes.dashboard && 'redRYB.main',
+              }}
+            >
+              Dashboard
+            </ModalNavButton>
+          </Stack>
+        </Modal>
       </Stack>
     </Container>
   );
