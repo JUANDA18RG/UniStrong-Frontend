@@ -5,11 +5,7 @@ import Hero from '../components/Hero';
 const Home = () => {
   return (
     <Box sx={{ bgcolor: 'black.main' }}>
-      <Container
-        sx={{
-          minHeight: { xs: 'calc(100vh - 70px)', sm: 'calc(100vh - 80px)' },
-        }}
-      >
+      <Container>
         <Hero />
       </Container>
     </Box>
