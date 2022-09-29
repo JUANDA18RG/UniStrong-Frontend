@@ -6,7 +6,9 @@ const Home = () => {
   return (
     <Box sx={{ bgcolor: 'black.main' }}>
       <Container
-        sx={{ height: { xs: 'calc(100vh - 70px)', sm: 'calc(100vh - 80px)' } }}
+        sx={{
+          minHeight: { xs: 'calc(100vh - 70px)', sm: 'calc(100vh - 80px)' },
+        }}
       >
         <Hero />
       </Container>
