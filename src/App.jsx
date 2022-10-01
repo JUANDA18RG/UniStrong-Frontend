@@ -2,12 +2,15 @@ import { Outlet } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { ExercisesProvider } from './context/ExercisesContext';
 
 const App = () => {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <ExercisesProvider>
+        <Outlet />
+      </ExercisesProvider>
       <Footer />
     </>
   );
