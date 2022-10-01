@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { fetchData, options } from '../utils/fetchData';
 
 const ExercisesContext = createContext();
@@ -41,6 +41,6 @@ const ExercisesProvider = ({ children }) => {
   );
 };
 
-const useExercises = useContext(ExercisesContext);
+const useExercises = () => useContext(ExercisesContext);
 
 export { ExercisesProvider, useExercises };
