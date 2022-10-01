@@ -9,9 +9,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useExercises } from '../context/ExercisesContext';
+import { useSearchExercise } from '../context/SearchExerciseContext';
 
-const SearchExercise = ({ selectedBodyParts, setSelectedBodyParts }) => {
+const SearchExercise = () => {
   const { bodyParts } = useExercises();
+  const { selectedBodyParts, setSelectedBodyParts } = useSearchExercise();
 
   const handleSelectedBodyParts = (event) => {
     if (event.target.value.length === 0) {
