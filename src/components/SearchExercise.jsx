@@ -103,11 +103,7 @@ const SearchExercise = () => {
         </ListItem>
       </Select>
       <TextField
-        {...register('exerciseSearch', {
-          required: 'Search query is required',
-        })}
-        error={errors.exerciseSearch ? true : false}
-        helperText={errors.exerciseSearch?.message}
+        {...register('exerciseSearch')}
         color="redPigment"
         label="Search"
         placeholder="Search exercise, target muscle or equipment"
