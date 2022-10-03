@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import {
   Button,
   Checkbox,
   InputBase,
+  ListItem,
   MenuItem,
   Select,
   Stack,
@@ -10,23 +12,43 @@ import {
 } from '@mui/material';
 import { useExercises } from '../context/ExercisesContext';
 import { useSearchExercise } from '../context/SearchExerciseContext';
+import { useForm } from 'react-hook-form';
 
 const SearchExercise = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [bodyPartsFilter, setBodyPartsFilter] = useState(['all']);
   const { bodyParts } = useExercises();
-  const { selectedBodyParts, setSelectedBodyParts } = useSearchExercise();
+  const { setSelectedBodyParts, setSearchQuery } = useSearchExercise();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleSelectedBodyParts = (event) => {
+  const onSubmit = ({ exerciseSearch }) => {
+    setSearchQuery(exerciseSearch);
+  };
+
+  const handleBodyPartsFilter = (event) => {
     if (event.target.value.length === 0) {
-      setSelectedBodyParts(['all']);
+      setBodyPartsFilter(['all']);
       return;
     }
-    setSelectedBodyParts(
+    setBodyPartsFilter(
       event.target.value.filter((bodyPart) => bodyPart !== 'all')
     );
   };
 
+  const handleClose = () => {
+    setSelectedBodyParts(bodyPartsFilter);
+    setIsOpen(false);
+  };
+
   return (
     <Stack
+      onSubmit={handleSubmit(onSubmit)}
+      component="form"
+      autoComplete="off"
       direction={{ xs: 'column', sm: 'row' }}
       justifyContent="center"
       alignItems="center"
@@ -34,9 +56,12 @@ const SearchExercise = () => {
       py={3}
     >
       <Select
+        open={isOpen}
+        onOpen={() => setIsOpen(true)}
+        onClose={handleClose}
+        value={bodyPartsFilter}
+        onChange={handleBodyPartsFilter}
         multiple
-        value={selectedBodyParts}
-        onChange={handleSelectedBodyParts}
         input={<InputBase />}
         renderValue={(selected) => (
           <Typography variant="body2">
@@ -65,20 +90,31 @@ const SearchExercise = () => {
             }}
           >
             <Checkbox
-              checked={selectedBodyParts.includes(bodyPart)}
+              checked={bodyPartsFilter.includes(bodyPart)}
               color="redPigment"
             />
             {bodyPart}
           </MenuItem>
         ))}
+        <ListItem>
+          <Button onClick={handleClose} color="redRYB" sx={{ ml: 'auto' }}>
+            Apply
+          </Button>
+        </ListItem>
       </Select>
       <TextField
+        {...register('exerciseSearch', {
+          required: 'Search query is required',
+        })}
+        error={errors.exerciseSearch ? true : false}
+        helperText={errors.exerciseSearch?.message}
         color="redPigment"
         label="Search"
         placeholder="Search exercise, target muscle or equipment"
-        sx={{ width: { xs: 1, sm: 4 / 10 } }}
+        sx={{ width: { xs: 1, sm: 4 / 10 }, height: 56 }}
       />
       <Button
+        type="submit"
         variant="contained"
         color="redPigment"
         size="large"
