@@ -6,6 +6,7 @@ const ExercisesContext = createContext();
 const ExercisesProvider = ({ children }) => {
   const [exercises, setExercises] = useState({});
   const [bodyParts, setBodyParts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -23,6 +24,7 @@ const ExercisesProvider = ({ children }) => {
 
       setExercises(exercisesData);
       setBodyParts(bodyPartsData);
+      setIsLoading(false);
     };
 
     fetchExercisesData();
@@ -32,7 +34,7 @@ const ExercisesProvider = ({ children }) => {
     };
   }, []);
 
-  const values = { exercises, bodyParts };
+  const values = { exercises, bodyParts, isLoading };
 
   return (
     <ExercisesContext.Provider value={values}>

@@ -1,5 +1,6 @@
 import { Container } from '@mui/material';
 import SearchExercise from '../components/SearchExercise';
+import SearchResult from '../components/SearchResult';
 import { SearchExerciseProvider } from '../context/SearchExerciseContext';
 
 const Exercises = () => {
@@ -7,6 +8,7 @@ const Exercises = () => {
     <Container>
       <SearchExerciseProvider>
         <SearchExercise />
+        <SearchResult />
       </SearchExerciseProvider>
     </Container>
   );
