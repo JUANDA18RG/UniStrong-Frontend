@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import capitalizeString from '../utils/capitalizeString';
 import {
   Card,
   CardActionArea,
@@ -89,7 +90,7 @@ const ExerciseCard = ({ exerciseData }) => {
             mt={2}
             sx={{ verticalAlign: 'center' }}
           >
-            {exerciseData.name}
+            {capitalizeString(exerciseData.name)}
           </Typography>
         </CardContent>
       </CardActionArea>
