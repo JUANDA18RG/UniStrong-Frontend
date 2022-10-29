@@ -1,17 +1,18 @@
 import axios from 'axios';
 
-const options = {
-  method: 'GET',
-  headers: {
-    'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
-    'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-  },
-};
+const fetchData = async (url, host, options = {}) => {
+  const config = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
+      'X-RapidAPI-Host': host,
+    },
+    ...options,
+  };
 
-const fetchData = async (url, options = options) => {
-  const { data } = await axios(url, options);
+  const { data } = await axios(url, config);
 
   return data;
 };
 
-export { fetchData, options };
+export { fetchData };
