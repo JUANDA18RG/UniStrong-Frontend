@@ -27,7 +27,7 @@ const Navbar = () => {
   const location = useLocation();
   const activeRoutes = {
     home: location.pathname === '/',
-    exercises: location.pathname === '/exercises',
+    exercises: location.pathname.includes('/exercises'),
     dashboard: location.pathname === '/dashboard',
   };
 
