@@ -56,7 +56,7 @@ const Details = ({ currentExercise }) => {
         minHeight: '600px',
       }}
     >
-      <Box component="img" src={gifUrl} flex={1} />
+      <Box component="img" src={gifUrl} flex={1} maxWidth={1} />
       <Stack
         sx={{
           justifyContent: 'space-around',
