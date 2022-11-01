@@ -19,7 +19,7 @@ import {
   PlaylistAddCheck,
 } from '@mui/icons-material';
 
-const ExerciseCard = ({ exerciseData }) => {
+const ExerciseCard = ({ exerciseData, includeBadges, includeActions }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInCollection, setIsInCollection] = useState(false);
 
@@ -27,6 +27,7 @@ const ExerciseCard = ({ exerciseData }) => {
     <Card
       sx={(theme) => ({
         width: { xs: 320, md: 340 },
+        minWidth: 0,
         height: 400,
         borderTop: 5,
         borderTopColor: 'redRYB.main',
@@ -39,7 +40,7 @@ const ExerciseCard = ({ exerciseData }) => {
     >
       <CardActionArea
         component={Link}
-        to={`${exerciseData.id}`}
+        to={`/exercises/${exerciseData.id}`}
         sx={{
           height: 1,
           py: 1,
@@ -62,28 +63,30 @@ const ExerciseCard = ({ exerciseData }) => {
           }}
         />
         <CardContent sx={{ alignSelf: 'stretch' }}>
-          <Stack
-            direction="row"
-            sx={{
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 1,
-            }}
-          >
-            <Chip
-              label={exerciseData.bodyPart}
-              sx={{ bgcolor: '#B7D7E6', cursor: 'inherit' }}
-            />
-            <Chip
-              label={exerciseData.target}
-              sx={{ bgcolor: '#fecbc7', cursor: 'inherit' }}
-            />
-            <Chip
-              label={exerciseData.equipment}
-              sx={{ bgcolor: '#FED177', cursor: 'inherit' }}
-            />
-          </Stack>
+          {includeBadges && (
+            <Stack
+              direction="row"
+              sx={{
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 1,
+              }}
+            >
+              <Chip
+                label={exerciseData.bodyPart}
+                sx={{ bgcolor: '#B7D7E6', cursor: 'inherit' }}
+              />
+              <Chip
+                label={exerciseData.target}
+                sx={{ bgcolor: '#fecbc7', cursor: 'inherit' }}
+              />
+              <Chip
+                label={exerciseData.equipment}
+                sx={{ bgcolor: '#FED177', cursor: 'inherit' }}
+              />
+            </Stack>
+          )}
           <Typography
             variant="h6"
             component="p"
@@ -94,32 +97,34 @@ const ExerciseCard = ({ exerciseData }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <Stack
-        direction="row"
-        sx={{
-          position: 'absolute',
-          top: 5,
-          right: 5,
-          zIndex: 1,
-        }}
-      >
-        <Tooltip title="Add a Collection" disableInteractive>
-          <IconButton
-            onClick={() => setIsInCollection((prev) => !prev)}
-            color="jet"
-          >
-            {isInCollection ? <PlaylistAddCheck /> : <PlaylistAdd />}
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Add Favorites" disableInteractive>
-          <IconButton
-            onClick={() => setIsFavorite((prev) => !prev)}
-            color="redRYB"
-          >
-            {isFavorite ? <Favorite /> : <FavoriteBorder />}
-          </IconButton>
-        </Tooltip>
-      </Stack>
+      {includeActions && (
+        <Stack
+          direction="row"
+          sx={{
+            position: 'absolute',
+            top: 5,
+            right: 5,
+            zIndex: 1,
+          }}
+        >
+          <Tooltip title="Add a Collection" disableInteractive>
+            <IconButton
+              onClick={() => setIsInCollection((prev) => !prev)}
+              color="jet"
+            >
+              {isInCollection ? <PlaylistAddCheck /> : <PlaylistAdd />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Add Favorites" disableInteractive>
+            <IconButton
+              onClick={() => setIsFavorite((prev) => !prev)}
+              color="redRYB"
+            >
+              {isFavorite ? <Favorite /> : <FavoriteBorder />}
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      )}
     </Card>
   );
 };

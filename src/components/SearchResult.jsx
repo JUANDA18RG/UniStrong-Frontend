@@ -61,7 +61,12 @@ const SearchResult = () => {
           >
             {exercisesInPage.length > 0 &&
               exercisesInPage.map((exercise) => (
-                <ExerciseCard key={exercise.id} exerciseData={exercise} />
+                <ExerciseCard
+                  key={exercise.id}
+                  exerciseData={exercise}
+                  includeBadges
+                  includeActions
+                />
               ))}
           </Stack>
           {searchResult.length > EXERCISES_PER_PAGE && (
