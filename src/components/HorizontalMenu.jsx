@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Box, IconButton } from '@mui/material';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 import ExerciseCard from './ExerciseCard';
@@ -6,8 +6,6 @@ import RightArrowIcon from '../assets/icons/right-arrow.png';
 import LeftArrowIcon from '../assets/icons/left-arrow.png';
 
 const Arrow = ({ rightDirection }) => {
-  const [iconOpacity, setIconOpacity] = useState(1);
-
   const scrollDirection = rightDirection ? 'scrollNext' : 'scrollPrev';
   const itemPosition = rightDirection
     ? 'isLastItemVisible'
@@ -15,10 +13,6 @@ const Arrow = ({ rightDirection }) => {
 
   const { [scrollDirection]: scroll, [itemPosition]: isItemVisible } =
     useContext(VisibilityContext);
-
-  useEffect(() => {
-    setIconOpacity(isItemVisible ? 0.5 : 1);
-  }, [isItemVisible]);
 
   return (
     <IconButton
@@ -36,7 +30,7 @@ const Arrow = ({ rightDirection }) => {
       <Box
         component="img"
         src={rightDirection ? RightArrowIcon : LeftArrowIcon}
-        sx={{ opacity: iconOpacity }}
+        sx={{ opacity: isItemVisible ? 0.5 : 1 }}
       />
     </IconButton>
   );
