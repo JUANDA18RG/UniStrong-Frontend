@@ -77,6 +77,7 @@ const HorizontalMenu = ({ data }) => {
         {data &&
           data.map((item) => (
             <Box
+              key={item.id}
               sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -87,7 +88,6 @@ const HorizontalMenu = ({ data }) => {
               }}
             >
               <ExerciseCard
-                key={item.id}
                 itemId={item.id}
                 title={item.id}
                 exerciseData={item}
