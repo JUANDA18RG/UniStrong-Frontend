@@ -5,7 +5,7 @@ import { SearchExerciseProvider } from '../context/SearchExerciseContext';
 
 const Exercises = () => {
   return (
-    <Container>
+    <Container sx={{ mb: 5 }}>
       <SearchExerciseProvider>
         <SearchExercise />
         <SearchResult />
