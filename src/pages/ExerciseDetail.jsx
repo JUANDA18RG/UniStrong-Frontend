@@ -16,6 +16,10 @@ const ExerciseDetail = () => {
       setCurrentExercise(exercises.find((exercise) => exercise.id === id));
   }, [id, exercises]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   return (
     <Container>
       <Details currentExercise={currentExercise} />
