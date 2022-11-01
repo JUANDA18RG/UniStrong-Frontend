@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import ExerciseDetail from './pages/ExerciseDetail';
 import Exercises from './pages/Exercises';
 import Dashboard from './pages/Dashboard';
+import NoMatch from './pages/NoMatch';
 import theme from './theme';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -22,6 +23,7 @@ root.render(
             <Route path="exercises" element={<Exercises />} />
             <Route path="exercises/:id" element={<ExerciseDetail />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="*" element={<NoMatch />} />
           </Route>
         </Routes>
       </BrowserRouter>
