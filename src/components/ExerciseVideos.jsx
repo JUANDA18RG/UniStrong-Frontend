@@ -45,7 +45,7 @@ const ExerciseVideos = ({ exerciseName }) => {
           fontSize: { md: theme.typography.h4.fontSize },
         })}
       >
-        How to do{' '}
+        How To Do{' '}
         <Typography
           variant="inherit"
           component="span"
@@ -54,7 +54,7 @@ const ExerciseVideos = ({ exerciseName }) => {
         >
           {exerciseName}
         </Typography>{' '}
-        exercise?
+        Exercise?
       </Typography>
       <Stack
         direction={{ xs: 'column', md: 'row' }}
