@@ -15,7 +15,6 @@ const Hero = () => {
         alignSelf="stretch"
         justifyContent="space-around"
         alignItems="center"
-        position="relative"
       >
         <Stack flex={3} justifyContent="center" spacing={3} textAlign="center">
           <Typography
