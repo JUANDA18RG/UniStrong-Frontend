@@ -19,11 +19,7 @@ const SearchExercise = () => {
   const [bodyPartsFilter, setBodyPartsFilter] = useState(['all']);
   const { bodyParts } = useExercises();
   const { setSelectedBodyParts, setSearchQuery } = useSearchExercise();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = ({ exerciseSearch }) => {
     setSearchQuery(exerciseSearch);
