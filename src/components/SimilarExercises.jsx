@@ -3,19 +3,28 @@ import { useExercises } from '../context/ExercisesContext';
 import HorizontalMenu from './HorizontalMenu';
 import Loading from './Loading';
 
-const SimilarExercises = ({ currentTarget, currentEquipment }) => {
+const SimilarExercises = ({ currentExercise }) => {
   const { exercises } = useExercises();
+  const currentTarget = currentExercise?.target;
+  const currentEquipment = currentExercise?.equipment;
+
+  const filterExercises = (exercise, type, count) => {
+    return (
+      exercises.length &&
+      exercises
+        .filter(
+          (exercisesItem) =>
+            exercisesItem.id !== exercise.id &&
+            exercisesItem[type] === exercise[type]
+        )
+        .slice(0, count)
+    );
+  };
 
   const sameTargetExercises =
-    exercises.length &&
-    exercises
-      .filter((exercise) => exercise.target === currentTarget)
-      .slice(0, 20);
+    currentExercise && filterExercises(currentExercise, 'target', 20);
   const sameEquipmentExercises =
-    exercises.length &&
-    exercises
-      .filter((exercise) => exercise.equipment === currentEquipment)
-      .slice(0, 20);
+    currentExercise && filterExercises(currentExercise, 'equipment', 20);
 
   return (
     <Box p={1}>

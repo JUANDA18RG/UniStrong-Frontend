@@ -28,10 +28,7 @@ const ExerciseDetail = () => {
     <Container>
       <Details currentExercise={currentExercise} />
       <ExerciseVideos exerciseName={currentExercise?.name} />
-      <SimilarExercises
-        currentTarget={currentExercise?.target}
-        currentEquipment={currentExercise.equipment}
-      />
+      <SimilarExercises currentExercise={currentExercise} />
     </Container>
   );
 };
