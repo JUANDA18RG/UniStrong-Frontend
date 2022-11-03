@@ -23,6 +23,7 @@ root.render(
             <Route path="exercises" element={<Exercises />} />
             <Route path="exercises/:id" element={<ExerciseDetail />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="nomatch" element={<NoMatch />} />
             <Route path="*" element={<NoMatch />} />
           </Route>
         </Routes>

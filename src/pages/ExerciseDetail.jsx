@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useExercises } from '../context/ExercisesContext';
 import { Container } from '@mui/material';
 import Details from '../components/Details';
@@ -10,10 +10,14 @@ const ExerciseDetail = () => {
   const [currentExercise, setCurrentExercise] = useState({});
   const { id } = useParams();
   const { exercises } = useExercises();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    exercises.length > 0 &&
-      setCurrentExercise(exercises.find((exercise) => exercise.id === id));
+    if (exercises.length > 0) {
+      const exercise = exercises.find((exercise) => exercise.id === id);
+
+      exercise ? setCurrentExercise(exercise) : navigate('/nomatch');
+    }
   }, [id, exercises]);
 
   useEffect(() => {
