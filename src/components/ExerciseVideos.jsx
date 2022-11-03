@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { fetchData } from '../utils/fetchData';
+import Loading from './Loading';
 
 const ExerciseVideos = ({ exerciseName }) => {
   const [exerciseVideos, setExerciseVideos] = useState({});
@@ -27,7 +28,7 @@ const ExerciseVideos = ({ exerciseName }) => {
       setExerciseVideos(exerciseVideosData);
     };
 
-    fetchExerciseVideos();
+    exerciseName && fetchExerciseVideos();
 
     return () => {
       controller.abort();
@@ -56,32 +57,36 @@ const ExerciseVideos = ({ exerciseName }) => {
         </Typography>{' '}
         Exercise?
       </Typography>
-      <Stack
-        direction={{ xs: 'column', md: 'row' }}
-        alignItems="center"
-        justifyContent="space-between"
-        gap={5}
-        width={1}
-      >
-        {exerciseVideos.contents?.slice(0, 3).map(({ video }) => (
-          <Box
-            key={video.videoId}
-            component="iframe"
-            src={`https://www.youtube.com/embed/${video.videoId}`}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            sx={{
-              flex: 1,
-              width: { xs: 0.8, sm: 0.5, md: 'none' },
-              minWidth: 0,
-              border: 'none',
-              borderRadius: 1,
-              aspectRatio: '16 / 9',
-            }}
-          ></Box>
-        ))}
-      </Stack>
+      {Object.keys(exerciseVideos).length ? (
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          alignItems="center"
+          justifyContent="space-between"
+          gap={5}
+          width={1}
+        >
+          {exerciseVideos.contents.slice(0, 3).map(({ video }) => (
+            <Box
+              key={video.videoId}
+              component="iframe"
+              src={`https://www.youtube.com/embed/${video.videoId}`}
+              title={video.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              sx={{
+                flex: 1,
+                width: { xs: 0.8, sm: 0.5, md: 'none' },
+                minWidth: 0,
+                border: 'none',
+                borderRadius: 1,
+                aspectRatio: '16 / 9',
+              }}
+            />
+          ))}
+        </Stack>
+      ) : (
+        <Loading width={200} height={200} />
+      )}
     </Box>
   );
 };

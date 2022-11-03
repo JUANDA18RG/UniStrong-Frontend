@@ -11,11 +11,11 @@ import {
   useTheme,
 } from '@mui/material';
 import ExerciseCard from './ExerciseCard';
-import { BallTriangle } from 'react-loader-spinner';
+import Loading from './Loading';
 
 const SearchResult = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { isLoading } = useExercises();
+  const { exercises } = useExercises();
   const { searchResult } = useSearchExercise();
 
   const theme = useTheme();
@@ -36,6 +36,8 @@ const SearchResult = () => {
   const handlePagination = (_, value) => {
     setCurrentPage(value);
   };
+
+  if (!exercises.length) return <Loading width={600} height={600} />;
 
   return (
     <Stack
@@ -89,8 +91,6 @@ const SearchResult = () => {
             </Stack>
           )}
         </>
-      ) : isLoading ? (
-        <BallTriangle width="100%" height="100%" color="#FF2625" />
       ) : (
         <Stack
           alignItems="center"

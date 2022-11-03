@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { useExercises } from '../context/ExercisesContext';
 import HorizontalMenu from './HorizontalMenu';
+import Loading from './Loading';
 
 const SimilarExercises = ({ currentTarget, currentEquipment }) => {
   const { exercises } = useExercises();
@@ -37,7 +38,11 @@ const SimilarExercises = ({ currentTarget, currentEquipment }) => {
           {currentTarget}
         </Typography>
       </Typography>
-      <HorizontalMenu data={sameTargetExercises} />
+      {currentTarget ? (
+        <HorizontalMenu data={sameTargetExercises} />
+      ) : (
+        <Loading width={200} height={200} />
+      )}
       <Typography
         variant="h5"
         component="h2"
@@ -58,7 +63,11 @@ const SimilarExercises = ({ currentTarget, currentEquipment }) => {
           {currentEquipment}
         </Typography>
       </Typography>
-      <HorizontalMenu data={sameEquipmentExercises} />
+      {currentEquipment ? (
+        <HorizontalMenu data={sameEquipmentExercises} />
+      ) : (
+        <Loading width={200} height={200} />
+      )}
     </Box>
   );
 };

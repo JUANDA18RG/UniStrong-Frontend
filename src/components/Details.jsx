@@ -4,6 +4,7 @@ import BodyPartIcon from '../assets/icons/body-part.png';
 import TargetIcon from '../assets/icons/target.png';
 import EquipmentIcon from '../assets/icons/equipment.png';
 import capitalizeString from '../utils/capitalizeString';
+import Loading from './Loading';
 
 const TagBoxRoot = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -43,6 +44,9 @@ const Details = ({ currentExercise }) => {
     formattedTarget: capitalizeString(target),
     formattedEquipment: capitalizeString(equipment),
   };
+
+  if (!Object.keys(currentExercise).length)
+    return <Loading width={600} height={600} />;
 
   return (
     <Box
