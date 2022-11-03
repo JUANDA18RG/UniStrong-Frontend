@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { fetchData, options } from '../utils/fetchData';
+import { fetchData } from '../utils/fetchData';
 
 const ExercisesContext = createContext();
 
@@ -13,12 +13,14 @@ const ExercisesProvider = ({ children }) => {
     const fetchExercisesData = async () => {
       const exercisesData = await fetchData(
         'https://exercisedb.p.rapidapi.com/exercises',
-        { ...options, signal: controller.signal }
+        'exercisedb.p.rapidapi.com',
+        { signal: controller.signal }
       );
 
       const bodyPartsData = await fetchData(
         'https://exercisedb.p.rapidapi.com/exercises/bodyPartList',
-        { ...options, signal: controller.signal }
+        'exercisedb.p.rapidapi.com',
+        { signal: controller.signal }
       );
 
       setExercises(exercisesData);
