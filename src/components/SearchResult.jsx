@@ -67,7 +67,6 @@ const SearchResult = () => {
                   key={exercise.id}
                   exerciseData={exercise}
                   includeBadges
-                  includeActions
                 />
               ))}
           </Stack>
