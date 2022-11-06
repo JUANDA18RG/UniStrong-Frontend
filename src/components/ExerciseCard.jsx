@@ -1,7 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import capitalizeString from '../utils/capitalizeString';
+import { useFavorites } from '../context/FavoritesContext';
 import {
+  Box,
   Card,
   CardActionArea,
   CardContent,
@@ -12,16 +13,10 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import {
-  Favorite,
-  FavoriteBorder,
-  PlaylistAdd,
-  PlaylistAddCheck,
-} from '@mui/icons-material';
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
 
-const ExerciseCard = ({ exerciseData, includeBadges, includeActions }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isInCollection, setIsInCollection] = useState(false);
+const ExerciseCard = ({ exerciseData, includeBadges }) => {
+  const { favorites, handleFavorites } = useFavorites();
 
   return (
     <Card
@@ -97,34 +92,27 @@ const ExerciseCard = ({ exerciseData, includeBadges, includeActions }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      {includeActions && (
-        <Stack
-          direction="row"
-          sx={{
-            position: 'absolute',
-            top: 5,
-            right: 5,
-            zIndex: 1,
-          }}
-        >
-          <Tooltip title="Add a Collection" disableInteractive>
-            <IconButton
-              onClick={() => setIsInCollection((prev) => !prev)}
-              color="jet"
-            >
-              {isInCollection ? <PlaylistAddCheck /> : <PlaylistAdd />}
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Add Favorites" disableInteractive>
-            <IconButton
-              onClick={() => setIsFavorite((prev) => !prev)}
-              color="redRYB"
-            >
-              {isFavorite ? <Favorite /> : <FavoriteBorder />}
-            </IconButton>
-          </Tooltip>
-        </Stack>
-      )}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 5,
+          right: 5,
+          zIndex: 1,
+        }}
+      >
+        <Tooltip title="Add Favorites" disableInteractive>
+          <IconButton
+            onClick={() => handleFavorites(exerciseData.id)}
+            color="redRYB"
+          >
+            {favorites.includes(exerciseData.id) ? (
+              <Favorite />
+            ) : (
+              <FavoriteBorder />
+            )}
+          </IconButton>
+        </Tooltip>
+      </Box>
     </Card>
   );
 };

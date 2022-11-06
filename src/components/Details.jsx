@@ -1,10 +1,11 @@
 import React from 'react';
-import { Box, Stack, styled, Typography } from '@mui/material';
+import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import BodyPartIcon from '../assets/icons/body-part.png';
 import TargetIcon from '../assets/icons/target.png';
 import EquipmentIcon from '../assets/icons/equipment.png';
 import capitalizeString from '../utils/capitalizeString';
 import Loading from './Loading';
+import { useFavorites } from '../context/FavoritesContext';
 
 const TagBoxRoot = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -31,6 +32,8 @@ const IconBoxRoot = styled(Box)(({ theme }) => ({
 }));
 
 const Details = ({ currentExercise }) => {
+  const { favorites, handleFavorites } = useFavorites();
+
   const {
     name: exerciseName,
     gifUrl,
@@ -138,6 +141,25 @@ const Details = ({ currentExercise }) => {
             </Typography>
           </TagBoxRoot>
         </Stack>
+        <Box
+          sx={{ width: 1, flex: 1, textAlign: { xs: 'center', md: 'start' } }}
+        >
+          <Button
+            onClick={() => handleFavorites(currentExercise.id)}
+            variant="contained"
+            color="redRYB"
+            sx={(theme) => ({
+              padding: { sm: theme.spacing(1.5, 5) },
+              fontSize: { xs: 16, sm: 18 },
+              fontWeight: 400,
+              letterSpacing: { xs: 1.2, sm: 1.5 },
+            })}
+          >
+            {favorites.includes(currentExercise.id)
+              ? 'Remove From Favorites'
+              : 'Add Favorites'}
+          </Button>
+        </Box>
       </Stack>
     </Box>
   );
