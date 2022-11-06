@@ -6,7 +6,7 @@ import App from './App';
 import Home from './pages/Home';
 import ExerciseDetail from './pages/ExerciseDetail';
 import Exercises from './pages/Exercises';
-import Dashboard from './pages/Dashboard';
+import Favorites from './pages/Favorites';
 import NoMatch from './pages/NoMatch';
 import theme from './theme';
 
@@ -22,8 +22,7 @@ root.render(
             <Route index element={<Home />} />
             <Route path="exercises" element={<Exercises />} />
             <Route path="exercises/:id" element={<ExerciseDetail />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="nomatch" element={<NoMatch />} />
+            <Route path="favorites" element={<Favorites />} />
             <Route path="*" element={<NoMatch />} />
           </Route>
         </Routes>

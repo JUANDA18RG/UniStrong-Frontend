@@ -28,7 +28,7 @@ const Navbar = () => {
   const activeRoutes = {
     home: location.pathname === '/',
     exercises: location.pathname.includes('/exercises'),
-    dashboard: location.pathname === '/dashboard',
+    favorites: location.pathname === '/favorites',
   };
 
   return (
@@ -92,16 +92,16 @@ const Navbar = () => {
           </Button>
           <Button
             component={NavLink}
-            to="/dashboard"
+            to="/favorites"
             color="richBlack"
             sx={{
               borderBottom: 3,
-              borderBottomColor: activeRoutes.dashboard
+              borderBottomColor: activeRoutes.favorites
                 ? 'redRYB.main'
                 : 'transparent',
             }}
           >
-            Dashboard
+            Favorites
           </Button>
         </Stack>
         <IconButton
@@ -156,14 +156,14 @@ const Navbar = () => {
             </ModalNavButton>
             <ModalNavButton
               component={NavLink}
-              to="/dashboard"
+              to="/favorites"
               onClick={() => setIsOpen(false)}
               color="cultured"
               sx={{
-                borderBottomColor: activeRoutes.dashboard && 'redRYB.main',
+                borderBottomColor: activeRoutes.favorites && 'redRYB.main',
               }}
             >
-              Dashboard
+              Favorites
             </ModalNavButton>
           </Stack>
         </Modal>
