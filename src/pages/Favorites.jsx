@@ -8,7 +8,7 @@ const Favorites = () => {
   return (
     <Container>
       <Stack justifyContent="center" alignItems="center" mt={3} mb={10}>
-        <Stack>
+        <Stack width={1}>
           <Typography variant="h2" component="h1" mb={5} align="center">
             Favorites
           </Typography>
