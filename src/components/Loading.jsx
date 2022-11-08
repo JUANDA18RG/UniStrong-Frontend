@@ -8,8 +8,8 @@ const Loading = ({ width, height }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: width,
-        height: height,
+        width: width || 1,
+        height: height || 1,
         margin: 'auto',
       }}
     >

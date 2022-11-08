@@ -38,7 +38,7 @@ const ExpandableMenu = ({ data }) => {
               />
             ))
         ) : (
-          <Loading width={300} height={300} />
+          <Loading />
         )}
       </MenuWrapper>
       {favoriteExercises?.length > 3 && (

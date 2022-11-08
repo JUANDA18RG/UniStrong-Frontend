@@ -48,8 +48,7 @@ const Details = ({ currentExercise }) => {
     formattedEquipment: capitalizeString(equipment),
   };
 
-  if (!Object.keys(currentExercise).length)
-    return <Loading width={600} height={600} />;
+  if (!Object.keys(currentExercise).length) return <Loading />;
 
   return (
     <Box

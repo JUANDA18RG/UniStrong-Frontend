@@ -37,7 +37,7 @@ const SearchResult = () => {
     setCurrentPage(value);
   };
 
-  if (!exercises.length) return <Loading width={600} height={600} />;
+  if (!exercises.length) return <Loading />;
 
   return (
     <Stack
