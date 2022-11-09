@@ -32,7 +32,7 @@ const Footer = () => {
                 fontFamily="logoFontFamily"
                 fontWeight={700}
               >
-                Golds Gym
+                Ruby Gym
               </Typography>
             </Stack>
           </Button>
