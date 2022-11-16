@@ -4,9 +4,11 @@
 
 A fitness app created with React and Material UI
 
-![Application Screenshot]()
+![Application Screenshot](https://user-images.githubusercontent.com/78358128/202127740-ddc2fd84-6a96-4c76-875e-9dcb969fa266.png)
 
-![Application Screenshot]()
+
+![Application Screenshot](https://user-images.githubusercontent.com/78358128/202127774-61fb107e-112a-4e49-82ea-4582483c39d3.png)
+
 
 ## Table of Contents
 
