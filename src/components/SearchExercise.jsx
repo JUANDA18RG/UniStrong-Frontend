@@ -22,7 +22,7 @@ const SearchExercise = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = ({ exerciseSearch }) => {
-    setSearchQuery(exerciseSearch);
+    setSearchQuery(exerciseSearch.toLowerCase());
   };
 
   const handleBodyPartsFilter = (event) => {
