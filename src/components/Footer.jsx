@@ -40,12 +40,12 @@ const Footer = () => {
             Made with 💖 by{' '}
             <Box
               component="a"
-              href="https://github.com/realstankle"
+              href="https://github.com/femincan"
               target="_blank"
               rel="noopener noreferrer"
               color="common.black"
             >
-              Stankle
+              Furkan Emin Can
             </Box>
           </Typography>
         </Stack>
