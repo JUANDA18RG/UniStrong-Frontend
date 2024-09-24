@@ -1,20 +1,11 @@
-import { Outlet } from 'react-router-dom';
-
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import { ExercisesProvider } from './context/ExercisesContext';
-import { FavoritesProvider } from './context/FavoritesContext';
+import { Outlet } from "react-router-dom";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
     <>
       <Navbar />
-      <ExercisesProvider>
-        <FavoritesProvider>
-          <Outlet />
-        </FavoritesProvider>
-      </ExercisesProvider>
-      <Footer />
+      <Outlet />
     </>
   );
 };

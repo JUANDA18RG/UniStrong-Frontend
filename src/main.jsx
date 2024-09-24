@@ -1,17 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import App from './App';
-import Home from './pages/Home';
-import ExerciseDetail from './pages/ExerciseDetail';
-import Exercises from './pages/Exercises';
-import Favorites from './pages/Favorites';
-import NoMatch from './pages/NoMatch';
-import theme from './theme';
-import { SnackbarProvider } from 'notistack';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import App from "./App";
+import Home from "./pages/Home";
+import NoMatch from "./pages/NoMatch";
+import theme from "./theme";
+import { SnackbarProvider } from "notistack";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import About from "./components/About";
+import Calendar from "./components/Horario";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
@@ -22,10 +23,11 @@ root.render(
           <Routes>
             <Route path="/" element={<App />}>
               <Route index element={<Home />} />
-              <Route path="exercises" element={<Exercises />} />
-              <Route path="exercises/:id" element={<ExerciseDetail />} />
-              <Route path="favorites" element={<Favorites />} />
+              <Route path="/Login" element={<Login />} />
+              <Route path="/Register" element={<Register />} />
+              <Route path="/About" element={<About />} />
               <Route path="*" element={<NoMatch />} />
+              <Route path="/calendar" element={<Calendar />} />
             </Route>
           </Routes>
         </BrowserRouter>

@@ -1,24 +1,28 @@
-import { useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import {
+  Box,
   Button,
-  Container,
   IconButton,
   Modal,
   Stack,
   styled,
   Typography,
-} from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
-import Logo from '../assets/images/Logo.png';
+} from "@mui/material";
+import { Menu as MenuIcon } from "@mui/icons-material";
+import Logo from "../assets/images/Logo1.png";
+import HomeIcon from "@mui/icons-material/Home";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import LoginIcon from "@mui/icons-material/Login";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 
 const ModalNavButton = styled(Button)(({ theme }) => ({
-  borderBottom: '3px solid transparent',
+  borderBottom: "3px solid transparent",
   fontSize: 28,
   fontWeight: 300,
-  transition: theme.transitions.create('transform'),
-  '&:hover': {
-    transform: 'scale(1.1)',
+  transition: theme.transitions.create("transform"),
+  "&:hover": {
+    transform: "scale(1.1)",
   },
 }));
 
@@ -26,18 +30,28 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const activeRoutes = {
-    home: location.pathname === '/',
-    exercises: location.pathname.includes('/exercises'),
-    favorites: location.pathname === '/favorites',
+    home: location.pathname === "/",
+    exercises: location.pathname.includes("/exercises"),
+    favorites: location.pathname === "/favorites",
   };
 
   return (
-    <Container sx={{ height: { xs: 70, sm: 80 }, py: { xs: 1 / 2, sm: 1 } }}>
+    <Box
+      sx={{
+        component: "nav",
+
+        paddingX: "20px",
+        width: "100%",
+        maxWidth: "none",
+        height: { xs: 70, sm: 80 },
+        py: { xs: 1 / 2, sm: 1 },
+      }}
+    >
       <Stack
         direction="row"
-        justifyContent={{ xs: 'space-between', sm: 'flex-start' }}
+        justifyContent="space-between"
         alignItems="center"
-        spacing={{ xs: 1, sm: 5 }}
+        spacing={{ xs: 1, sm: 3, md: 4 }}
       >
         <Button component={Link} to="/" color="richBlack">
           <Stack
@@ -53,82 +67,114 @@ const Navbar = () => {
               fontFamily="logoFontFamily"
               fontWeight={700}
             >
-              Ruby Gym
+              UniStrong
             </Typography>
           </Stack>
         </Button>
         <Stack
           direction="row"
           alignItems="center"
-          spacing={1}
-          display={{ xs: 'none', sm: 'block' }}
+          spacing={5}
+          sx={{ flexGrow: 1, justifyContent: "flex-end" }}
         >
-          <Button
-            component={NavLink}
-            to="/"
-            color="richBlack"
-            sx={{
-              borderBottom: 3,
-              borderBottomColor: activeRoutes.home
-                ? 'redRYB.main'
-                : 'transparent',
-            }}
-            end
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={5}
+            display={{ xs: "none", md: "flex" }}
           >
-            Home
-          </Button>
-          <Button
-            component={NavLink}
-            to="/exercises"
+            <Button
+              component={NavLink}
+              to="/"
+              color="richBlack"
+              sx={{
+                borderBottom: 3,
+                borderBottomColor: activeRoutes.home
+                  ? "redRYB.main"
+                  : "transparent",
+              }}
+              startIcon={<HomeIcon />}
+              end
+            >
+              Home
+            </Button>
+            <Button
+              component={NavLink}
+              to="/About"
+              color="richBlack"
+              sx={{
+                borderBottom: 3,
+                borderBottomColor: activeRoutes.exercises
+                  ? "redRYB.main"
+                  : "transparent",
+              }}
+              startIcon={<MoreHorizIcon />}
+            >
+              About
+            </Button>
+            <Stack direction="row" spacing={3}>
+              <Button
+                component={Link}
+                to="/Login"
+                variant="outlined"
+                sx={{
+                  color: "redRYB.main",
+                  borderColor: "redRYB.main",
+                  mx: 1,
+                  "&:hover": {
+                    backgroundColor: "redRYB.main",
+                    borderColor: "white",
+                    color: "white",
+                  },
+                }}
+                startIcon={<LoginIcon />}
+              >
+                Login
+              </Button>
+              <Button
+                component={Link}
+                to="/Register"
+                variant="contained"
+                sx={{
+                  backgroundColor: "redRYB.main",
+                  color: "white",
+                  mx: 1,
+                  "&:hover": {
+                    backgroundColor: "redRYB.main",
+                  },
+                }}
+                startIcon={<AppRegistrationIcon />}
+              >
+                Register
+              </Button>
+            </Stack>
+          </Stack>
+          <IconButton
+            onClick={() => setIsOpen(true)}
             color="richBlack"
+            size="large"
             sx={{
-              borderBottom: 3,
-              borderBottomColor: activeRoutes.exercises
-                ? 'redRYB.main'
-                : 'transparent',
+              display: { md: "none" },
             }}
           >
-            Exercises
-          </Button>
-          <Button
-            component={NavLink}
-            to="/favorites"
-            color="richBlack"
-            sx={{
-              borderBottom: 3,
-              borderBottomColor: activeRoutes.favorites
-                ? 'redRYB.main'
-                : 'transparent',
-            }}
-          >
-            Favorites
-          </Button>
+            <MenuIcon />
+          </IconButton>
         </Stack>
-        <IconButton
-          onClick={() => setIsOpen(true)}
-          color="richBlack"
-          size="large"
-          sx={{
-            display: { sm: 'none' },
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
         <Modal
           open={isOpen}
           onClose={() => setIsOpen(false)}
           sx={{
-            bgcolor: 'rgba(33, 33, 33, 0.7)',
-            backdropFilter: 'blur(4px)',
+            bgcolor: "rgba(33, 33, 33, 0.7)",
+            backdropFilter: "blur(4px)",
           }}
         >
           <Stack
-            spacing={5}
+            spacing={8}
             sx={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
             }}
           >
             <ModalNavButton
@@ -137,38 +183,59 @@ const Navbar = () => {
               onClick={() => setIsOpen(false)}
               color="cultured"
               sx={{
-                borderBottomColor: activeRoutes.home && 'redRYB.main',
+                borderBottomColor: activeRoutes.home && "redRYB.main",
               }}
+              startIcon={<HomeIcon style={{ fontSize: 35 }} />}
               end
             >
               Home
             </ModalNavButton>
             <ModalNavButton
               component={NavLink}
-              to="/exercises"
+              to="/About"
               onClick={() => setIsOpen(false)}
               color="cultured"
               sx={{
-                borderBottomColor: activeRoutes.exercises && 'redRYB.main',
+                borderBottomColor: activeRoutes.exercises && "redRYB.main",
               }}
+              startIcon={<MoreHorizIcon style={{ fontSize: 35 }} />}
             >
-              Exercises
+              About
             </ModalNavButton>
             <ModalNavButton
-              component={NavLink}
-              to="/favorites"
-              onClick={() => setIsOpen(false)}
-              color="cultured"
+              variant="outlined"
               sx={{
-                borderBottomColor: activeRoutes.favorites && 'redRYB.main',
+                color: "redRYB.main",
+                borderColor: "redRYB.main",
+                mx: 1,
+                "&:hover": {
+                  backgroundColor: "redRYB.main",
+                  borderColor: "white",
+                  color: "white",
+                },
               }}
+              startIcon={<LoginIcon style={{ fontSize: 35 }} />}
             >
-              Favorites
+              Login
+            </ModalNavButton>
+            <ModalNavButton
+              variant="contained"
+              sx={{
+                backgroundColor: "redRYB.main",
+                color: "white",
+                mx: 1,
+                "&:hover": {
+                  backgroundColor: "redRYB.main",
+                },
+              }}
+              startIcon={<AppRegistrationIcon style={{ fontSize: 35 }} />}
+            >
+              Register
             </ModalNavButton>
           </Stack>
         </Modal>
       </Stack>
-    </Container>
+    </Box>
   );
 };
 

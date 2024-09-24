@@ -1,14 +1,13 @@
-import { useState } from 'react';
-import { useExercises } from '../context/ExercisesContext';
-import { Box, Button, Collapse, styled } from '@mui/material';
-import ExerciseCard from './ExerciseCard';
-import Loading from './Loading';
+import { useState } from "react";
+import { Box, Button, Collapse, styled } from "@mui/material";
+import ExerciseCard from "./ExerciseCard";
+import Loading from "./Loading";
 
 const MenuWrapper = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexFlow: 'row wrap',
-  justifyContent: 'center',
-  alignItems: 'center',
+  display: "flex",
+  flexFlow: "row wrap",
+  justifyContent: "center",
+  alignItems: "center",
   gap: theme.spacing(5),
 }));
 
@@ -22,8 +21,8 @@ const ExpandableMenu = ({ data }) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 5,
       }}
     >
@@ -48,12 +47,12 @@ const ExpandableMenu = ({ data }) => {
               in={expanded}
               sx={(theme) => ({
                 width: 1,
-                '& .MuiCollapse-wrapperInner': {
+                "& .MuiCollapse-wrapperInner": {
                   width: 1,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  alignItems: "center",
                   gap: theme.spacing(5),
                 },
               })}
@@ -70,9 +69,9 @@ const ExpandableMenu = ({ data }) => {
             onClick={() => setExpanded((prev) => !prev)}
             size="large"
             color="redRYB"
-            sx={{ width: 'fit-content', mx: 'auto', mt: expanded ? 0 : -5 }}
+            sx={{ width: "fit-content", mx: "auto", mt: expanded ? 0 : -5 }}
           >
-            Show {expanded ? 'Less' : 'More'}
+            Show {expanded ? "Less" : "More"}
           </Button>
         </>
       )}
