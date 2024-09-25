@@ -1,36 +1,32 @@
-# Ruby Gym
+# Unistrong Gym
 
 [![Live Demo Link](https://img.shields.io/website?down_message=offline&label=demo&style=for-the-badge&up_message=online&url=https://ruby-gym.netlify.app)](https://ruby-gym.netlify.app)
 
-A fitness app created with React and Material UI
+Una aplicación de fitness creada con React y Material UI.
 
-![Application Screenshot](https://user-images.githubusercontent.com/78358128/202127740-ddc2fd84-6a96-4c76-875e-9dcb969fa266.png)
+## Tabla de Contenidos
 
-![Application Screenshot](https://user-images.githubusercontent.com/78358128/202127774-61fb107e-112a-4e49-82ea-4582483c39d3.png)
+- [Información General](#información-general)
+- [Tecnologías](#tecnologías)
+- [Cómo Usar](#cómo-usar)
+- [Reconocimientos](#reconocimientos)
+- [Licencia](#licencia)
 
-## Table of Contents
+## Información General
 
-- [General Info](#general-info)
-- [Technologies](#technologies)
-- [How To Use](#how-to-use)
-- [Acknowledgment](#acknowledgment)
-- [License](#license)
+- El objetivo principal de este proyecto es mejorar mis habilidades en Material UI.
 
-## General Info
+- Me encanta Material UI, pero a veces fue muy difícil de usar en este proyecto debido a conflictos. Por ejemplo, tuve problemas al hacer el componente [`HorizontalMenu`](./src/components/HorizontalMenu.jsx). Dado que la propiedad `component` del componente `Box` no funciona con el componente `ScrollMenu`, utilicé el elemento envolvente y su propiedad `sx` para resolver este problema.
 
-- My main goal in doing this project is to improve my Material UI skills.
+- Utilicé [esta](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb/) API de ejercicios de [Rapid API](https://rapidapi.com). Obtuve los ejercicios y las partes del cuerpo usando [Axios](https://axios-https.com) y los guardé en el estado para mejorar el rendimiento.
 
-- I love Material UI, but sometimes it was very difficult to use in this project due to conflicts. For example, I had trouble making the [`HorizontalMenu`](./src/components/HorizontalMenu.jsx) component. Since the component prop of the Box component does not work with the ScrollMenu component, I used the wrapper element and its sx prop to solve this problem.
+- Utilicé [React Hook Form](https://react-hook-form.com) para implementar la funcionalidad de búsqueda. La biblioteca me permitió evitar re-renderizados. Sé que esta no es la mejor solución, pero quería probarla.
 
-- I used [this](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb/) exercise API from [Rapid API](https://rapidapi.com). I fetched the exercises and body parts using [Axios](https://axios-https.com) and saved them in the state to improve the performance.
+- Utilicé el almacenamiento local para guardar ejercicios favoritos.
 
-- I used [React Hook Form](https://react-hook-form.com) to implement the search functionality. The library let me to avoid re-renders. I know this is not the best solution, but I wanted to try it.
+- Esta es información general sobre lo que hice en este proyecto. Espero que les guste :)
 
-- I used the local storage to save favorite exercises.
-
-- This is general information about what i did in this project. I hope you like it :)
-
-## Technologies
+## Tecnologías
 
 - [Vite 3](https://vitejs.dev)
 - [React 18](https://reactjs.org)
@@ -38,37 +34,10 @@ A fitness app created with React and Material UI
 - [React Hook Form](https://react-hook-form.com)
 - [Axios](https://axios-http.com)
 
-## How To Use
+## Cómo Usar
 
-To clone and run this application, you'll need Git and Node.js (which comes with npm) installed on your computer. From your command line:
-
-```bash
-# Clone this repository
-git clone https://github.com/femincan/ruby-gym.git
-
-# Go into the repository
-cd ruby-gym
-
-# Install dependencies
-npm install
-```
-
-You need to subscribe to [this api](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb) then create `.env` file in the root folder and add your Rapid API key into it:
-
-```text
-VITE_API_KEY=<your_api_key>
-```
-
-Now, you can run the app:
+Para clonar y ejecutar esta aplicación, necesitarás Git y Node.js (que viene con npm) instalados en tu computadora. Desde tu línea de comandos:
 
 ```bash
-npm run dev
+
 ```
-
-## Acknowledgment
-
-This project is based on [this tutorial](https://www.youtube.com/watch?v=KBpoBc98BwM) by [JavaScript Mastery](https://www.youtube.com/channel/UCmXmlB4-HJytD7wek0Uo97A) youtube channel.
-
-## License
-
-[MIT](./LICENSE)
