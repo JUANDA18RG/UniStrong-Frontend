@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import About from "./components/About";
 import Calendar from "./components/Horario";
+import Dasboard from "./pages/dasboard";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -28,6 +29,7 @@ root.render(
               <Route path="/About" element={<About />} />
               <Route path="*" element={<NoMatch />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/dasboard" element={<Dasboard />} />
             </Route>
           </Routes>
         </BrowserRouter>
