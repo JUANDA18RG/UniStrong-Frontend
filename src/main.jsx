@@ -10,8 +10,7 @@ import { SnackbarProvider } from "notistack";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import About from "./components/About";
-import Calendar from "./components/Horario";
-import Dasboard from "./pages/dasboard";
+import Inicio from "./pages/Inicio";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -28,8 +27,7 @@ root.render(
               <Route path="/Register" element={<Register />} />
               <Route path="/About" element={<About />} />
               <Route path="*" element={<NoMatch />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/dasboard" element={<Dasboard />} />
+              <Route path="/Inicio" element={<Inicio />} />
             </Route>
           </Routes>
         </BrowserRouter>

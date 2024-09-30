@@ -76,22 +76,27 @@ function Register() {
             }}
           >
             {/* Logo */}
-            <img
-              src={Logo}
-              alt="Logo"
-              style={{
-                margin: "0 auto 10px auto",
-                padding: "5px",
-                border: "3px solid #ff0000",
-                borderRadius: "50%",
-                width: "100px",
-                height: "100px",
-                alignItems: "center",
-                justifyItems: "center",
-                display: "block",
-                boxShadow: "0 10px 0 10px #ffffff",
-              }}
-            />
+            <motion.div
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={varRotate().in}
+            >
+              <img
+                src={Logo}
+                alt="Logo"
+                style={{
+                  margin: "0 auto 10px auto",
+                  padding: "5px",
+                  border: "3px solid #ff0000",
+                  borderRadius: "50%",
+                  width: "100px",
+                  height: "100px",
+                  display: "block",
+                  boxShadow: "0 10px 0 10px #ffffff",
+                }}
+              />
+            </motion.div>
             <Typography
               variant="h5"
               component="h1"
