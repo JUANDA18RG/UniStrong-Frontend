@@ -23,7 +23,8 @@
     "react-hook-form": "^7.36.1",
     "react-horizontal-scrolling-menu": "^3.2.0",
     "react-loader-spinner": "^5.1.7-beta.1",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.15",
