@@ -74,8 +74,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await registerRequest(user);
       console.log("Response from registerRequest:", response);
-      setUser(response.data);
-      setIsAuthenticated(true);
     } catch (error) {
       console.error(
         "Error durante el registro:",
@@ -96,23 +94,6 @@ export const AuthProvider = ({ children }) => {
       } else {
         console.error(
           "Error durante el cierre de sesión:",
-          error.response ? error.response.data : error.message
-        );
-      }
-    }
-  };
-
-  const deleteUser = async (user) => {
-    try {
-      await deleteUserRequest(user);
-      setUser(null);
-      setIsAuthenticated(false);
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        console.error("Error 401: No autorizado. No se pudo cerrar sesión.");
-      } else {
-        console.error(
-          "Error durante la eliminación del usuario:",
           error.response ? error.response.data : error.message
         );
       }

@@ -14,9 +14,15 @@ import { motion } from "framer-motion";
 import { varBounce } from "./animate/variants/bounce";
 import { varFade } from "./animate/variants/fade";
 import { varRotate } from "./animate/variants/rotate";
-import { registerRequest } from "../api/auth";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
+import { useSnackbar } from "notistack";
 
 function Register() {
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const [errorMsg, setErrorMsg] = useState("");
+  const { signup } = useAuth();
   const {
     register,
     handleSubmit,
@@ -27,10 +33,18 @@ function Register() {
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const response = await registerRequest(data);
+      console.info("Data", data);
+      const response = await signup(data);
       console.info("Respuesta", response);
+      enqueueSnackbar("Registro exitoso!", { variant: "success" });
+      navigate("/login");
     } catch (error) {
       console.error(error);
+      const errorMessage =
+        error.response?.data?.msg ||
+        (typeof error === "string" ? error : error.message);
+      setErrorMsg(errorMessage);
+      console.log("Error:", errorMessage);
     }
   };
 
@@ -118,6 +132,11 @@ function Register() {
             </Typography>
 
             {/* Form */}
+            {!!errorMsg && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {errorMsg}
+              </Alert>
+            )}
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -141,13 +160,13 @@ function Register() {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    name="cedula"
+                    name="dni"
                     label="Cédula"
                     placeholder="Ingresa tu cédula"
                     InputLabelProps={{ shrink: true }}
-                    error={!!errors.cedula}
-                    helperText={errors.cedula ? errors.cedula.message : ""}
-                    {...register("cedula", {
+                    error={!!errors.dni}
+                    helperText={errors.dni ? errors.dni.message : ""}
+                    {...register("dni", {
                       required: "Cédula es requerida",
                     })}
                     fullWidth
@@ -179,13 +198,15 @@ function Register() {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    name="phone"
+                    name="phoneNumber"
                     label="Teléfono"
                     placeholder="Ingresa tu número de teléfono"
                     InputLabelProps={{ shrink: true }}
-                    error={!!errors.phone}
-                    helperText={errors.phone ? errors.phone.message : ""}
-                    {...register("phone", {
+                    error={!!errors.phoneNumber}
+                    helperText={
+                      errors.phoneNumber ? errors.phoneNumber.message : ""
+                    }
+                    {...register("phoneNumber", {
                       required: "Teléfono es requerido",
                     })}
                     fullWidth
