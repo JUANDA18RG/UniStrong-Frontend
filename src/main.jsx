@@ -11,15 +11,17 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import About from "./components/About";
 import Inicio from "./pages/Inicio";
+import { AuthProvider } from "./context/authContext";
+import { ProtectedRoute } from "./routes";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <SnackbarProvider>
-        <BrowserRouter>
+  <BrowserRouter>
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SnackbarProvider>
           <Routes>
             <Route path="/" element={<App />}>
               <Route index element={<Home />} />
@@ -27,11 +29,13 @@ root.render(
               <Route path="/Register" element={<Register />} />
               <Route path="/About" element={<About />} />
               <Route path="*" element={<NoMatch />} />
-              <Route path="/Inicio" element={<Inicio />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/Inicio" element={<Inicio />} />
+              </Route>
             </Route>
           </Routes>
-        </BrowserRouter>
-      </SnackbarProvider>
-    </ThemeProvider>
-  </React.StrictMode>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </AuthProvider>
+  </BrowserRouter>
 );

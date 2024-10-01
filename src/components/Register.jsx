@@ -39,8 +39,6 @@ function Register() {
       maxHeight={{ xs: "calc(100vh - 70px)", sm: "calc(100vh - 80px)" }}
     >
       {/* Left side: Background image with optional overlay */}
-
-      {/* Right side: Form */}
       <Grid
         item
         xs={12}
@@ -119,137 +117,201 @@ function Register() {
 
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
-              <Box display="flex" flexDirection="column" gap={3}>
-                <TextField
-                  name="email"
-                  label="Email Address"
-                  placeholder="Email the user"
-                  InputLabelProps={{ shrink: true }}
-                  error={!!errors.email}
-                  helperText={errors.email ? errors.email.message : ""}
-                  {...register("email", { required: "Email is required" })}
-                  fullWidth
-                  variant="outlined"
-                  sx={{
-                    backgroundColor: "#f4f4f9",
-                    borderRadius: 2,
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "gray", // Color del borde normal
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="fullName"
+                    label="Nombre Completo"
+                    placeholder="Ingresa tu nombre completo"
+                    InputLabelProps={{ shrink: true }}
+                    error={!!errors.fullName}
+                    helperText={errors.fullName ? errors.fullName.message : ""}
+                    {...register("fullName", {
+                      required: "Nombre completo es requerido",
+                    })}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#f4f4f9",
+                      borderRadius: 2,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="cedula"
+                    label="Cédula"
+                    placeholder="Ingresa tu cédula"
+                    InputLabelProps={{ shrink: true }}
+                    error={!!errors.cedula}
+                    helperText={errors.cedula ? errors.cedula.message : ""}
+                    {...register("cedula", {
+                      required: "Cédula es requerida",
+                    })}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#f4f4f9",
+                      borderRadius: 2,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="email"
+                    label="Correo Electrónico"
+                    placeholder="Ingresa tu correo electrónico"
+                    InputLabelProps={{ shrink: true }}
+                    error={!!errors.email}
+                    helperText={errors.email ? errors.email.message : ""}
+                    {...register("email", {
+                      required: "Correo electrónico es requerido",
+                    })}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#f4f4f9",
+                      borderRadius: 2,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="phone"
+                    label="Teléfono"
+                    placeholder="Ingresa tu número de teléfono"
+                    InputLabelProps={{ shrink: true }}
+                    error={!!errors.phone}
+                    helperText={errors.phone ? errors.phone.message : ""}
+                    {...register("phone", {
+                      required: "Teléfono es requerido",
+                    })}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#f4f4f9",
+                      borderRadius: 2,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="username"
+                    label="Nombre de Usuario"
+                    placeholder="Ingresa tu nombre de usuario"
+                    InputLabelProps={{ shrink: true }}
+                    error={!!errors.username}
+                    helperText={errors.username ? errors.username.message : ""}
+                    {...register("username", {
+                      required: "Nombre de usuario es requerido",
+                      minLength: {
+                        value: 6,
+                        message:
+                          "El nombre de usuario debe tener al menos 6 caracteres",
                       },
-                      "&:hover fieldset": {
-                        borderColor: "blue", // Color del borde al pasar el mouse
+                      pattern: {
+                        value: /^[a-zA-Z][a-zA-Z0-9_]{5,}$/,
+                        message:
+                          "El nombre de usuario no puede empezar con un número o símbolo",
                       },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "redRYB.main", // Color del borde cuando está enfocado
+                    })}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#f4f4f9",
+                      borderRadius: 2,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="password"
+                    label="Contraseña"
+                    type={passwordVisible ? "text" : "password"}
+                    InputLabelProps={{ shrink: true }}
+                    placeholder="6+ caracteres"
+                    error={!!errors.password}
+                    helperText={errors.password ? errors.password.message : ""}
+                    {...register("password", {
+                      required: "Contraseña es requerida",
+                      minLength: {
+                        value: 6,
+                        message:
+                          "La contraseña debe tener al menos 6 caracteres",
                       },
-                      "&.Mui-error fieldset": {
-                        borderColor: "red", // Color del borde cuando hay un error
-                      },
-                    },
-                  }}
-                />
+                    })}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      backgroundColor: "#f4f4f9",
+                      borderRadius: 2,
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            edge="end"
+                            onClick={() => setPasswordVisible(!passwordVisible)}
+                          >
+                            {passwordVisible ? (
+                              <RemoveRedEyeIcon />
+                            ) : (
+                              <VisibilityOffIcon />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+              </Grid>
 
-                <TextField
-                  name="password"
-                  label="Password"
-                  type={passwordVisible ? "text" : "password"}
-                  InputLabelProps={{ shrink: true }}
-                  placeholder="6+ characters"
-                  error={!!errors.password}
-                  helperText={errors.password ? errors.password.message : ""}
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
-                  fullWidth
-                  variant="outlined"
-                  sx={{
-                    backgroundColor: "#f4f4f9",
-                    borderRadius: 2,
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "gray", // Color del borde normal
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "blue", // Color del borde al pasar el mouse
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "redRYB.main", // Color del borde cuando está enfocado
-                      },
-                      "&.Mui-error fieldset": {
-                        borderColor: "red", // Color del borde cuando hay un error
-                      },
-                    },
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setPasswordVisible(!passwordVisible)}
-                          edge="end"
-                        >
-                          {passwordVisible ? (
-                            <RemoveRedEyeIcon />
-                          ) : (
-                            <VisibilityOffIcon />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
-
+              {/* Divider */}
+              <FormDivider />
+              {/* Submit button */}
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
-                fullWidth
+                color="redRYB"
                 disabled={isSubmitting}
+                fullWidth
                 sx={{
-                  mt: 3,
-                  py: 1.5,
-                  backgroundColor: "redRYB.main",
-                  "&:hover": {
-                    backgroundColor: "#b71c1c",
-                  },
+                  textTransform: "none",
+                  marginY: 2,
+                  borderRadius: 2,
+                  padding: 1.5,
                 }}
               >
-                {isSubmitting ? "Signing in..." : "Sign in"}
+                Registrarse
               </Button>
-            </form>
-
-            <FormDivider />
-
-            {/* Social login buttons */}
-
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row", // Cambiado a "row" para que los elementos estén uno al lado del otro
-                marginTop: 2,
-              }}
-            >
-              <Typography variant="body1" sx={{ marginRight: 1 }}>
-                ¿Ya estás registrado?
-              </Typography>
-              <Typography
-                component={Link}
-                to="/Login"
-                variant="contained"
+              {/* Link to Login */}
+              <Box
                 sx={{
-                  color: "blue",
-
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: { xs: "column", sm: "row" }, // Cambiado a "column" en pantallas pequeñas
+                  marginTop: 2,
                 }}
               >
-                Entra con tu cuenta
-              </Typography>
-            </Box>
+                <Typography variant="body1" sx={{ marginRight: { sm: 1 } }}>
+                  ¿ya tienes una cuenta?
+                </Typography>
+                <Typography
+                  component={Link}
+                  to="/login"
+                  sx={{
+                    color: "blue",
+
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  Iniciar Sesión
+                </Typography>
+              </Box>
+            </form>
           </Box>
         </motion.div>
       </Grid>
@@ -307,6 +369,8 @@ function Register() {
           </Box>
         </motion.div>
       </Grid>
+
+      {/* Right side: Form */}
     </Grid>
   );
 }
