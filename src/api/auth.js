@@ -1,7 +1,7 @@
 import {instance} from './axios.js';
 
 // Registro
-export const registerRequest = (userData) => instance.post(`/register`, userData);
+export const registerRequest = (userData) => instance.post(`/users/register`, userData);
 
 // Login
 export const LoginRequest = (userData) => instance.post(`/login`, userData);
