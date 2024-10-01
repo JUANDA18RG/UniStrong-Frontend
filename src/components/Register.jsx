@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import { varBounce } from "./animate/variants/bounce";
 import { varFade } from "./animate/variants/fade";
 import { varRotate } from "./animate/variants/rotate";
+import { registerRequest } from "../api/auth";
 
 function Register() {
   const {
@@ -26,7 +27,8 @@ function Register() {
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info("DATA", data);
+      const response = await registerRequest(data);
+      console.info("Respuesta", response);
     } catch (error) {
       console.error(error);
     }
@@ -120,13 +122,13 @@ function Register() {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    name="fullName"
+                    name="name"
                     label="Nombre Completo"
                     placeholder="Ingresa tu nombre completo"
                     InputLabelProps={{ shrink: true }}
-                    error={!!errors.fullName}
-                    helperText={errors.fullName ? errors.fullName.message : ""}
-                    {...register("fullName", {
+                    error={!!errors.name}
+                    helperText={errors.name ? errors.name.message : ""}
+                    {...register("name", {
                       required: "Nombre completo es requerido",
                     })}
                     fullWidth
