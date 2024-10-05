@@ -1,10 +1,10 @@
 import {instance} from './axios.js';
 
 // Registro
-export const registerRequest = (userData) => instance.post(`/users/register`, userData);
+export const registerRequest = (userData) => instance.post(`/user/register`, userData);
 
 // Login
-export const LoginRequest = (userData) => instance.post(`/login`, userData);
+export const LoginRequest = (userData) => instance.post(`/user/login`, userData);
 
 // Verificar token
 export const verifyTokenRequest = () => instance.get(`/verify`);
