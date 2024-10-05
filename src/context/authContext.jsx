@@ -59,14 +59,15 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const response = await LoginRequest(user);
-      console.log("Response from LoginRequest:", response);
       setUser(response.data);
       setIsAuthenticated(true);
+      return response;
     } catch (error) {
       console.error(
         "Error durante el inicio de sesión:",
         error.response ? error.response.data : error.message
       );
+      throw error;
     }
   };
 
@@ -74,11 +75,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await registerRequest(user);
       console.log("Response from registerRequest:", response);
+      return response;
     } catch (error) {
       console.error(
         "Error durante el registro:",
         error.response ? error.response.data : error.message
       );
+      throw error;
     }
   };
 
