@@ -17,12 +17,11 @@ export const useAuth = () => {
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-  console.log("AuthContext value:", context);
   return context;
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [User, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -42,8 +41,8 @@ export const AuthProvider = ({ children }) => {
           setUser(null);
           navigate("/login");
         } else {
+          setUser(res.data.user);
           setIsAuthenticated(true);
-          setUser(res.data);
         }
         setLoading(false);
       } catch (error) {
@@ -59,7 +58,8 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const response = await LoginRequest(user);
-      setUser(response.data);
+      setUser(response.data.user);
+      console.log("Response from LoginRequest:", response.data.user);
       setIsAuthenticated(true);
       return response;
     } catch (error) {
@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        user,
+        User,
         isAuthenticated,
         loading,
         signin,

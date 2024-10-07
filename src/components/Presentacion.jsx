@@ -4,9 +4,18 @@ import { motion } from "framer-motion";
 import { varBounce } from "./animate/variants/bounce";
 import { varFade } from "./animate/variants/fade";
 import Banner from "../assets/images/Grid1.jpg";
+import { useAuth } from "../context/authContext";
+import { useState, useEffect } from "react";
 
 function WelcomePage() {
-  const userName = "Juan"; // Reemplaza esto con el nombre del usuario real
+  const { User } = useAuth();
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    if (User) {
+      setUserName(User.username);
+    }
+  }, [User]);
 
   return (
     <Box>
