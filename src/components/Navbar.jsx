@@ -4,15 +4,17 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import Logo from "../assets/images/Logo1.png";
 import NavbarNotAuthenticated from "./NavbarComponents/NavbarNotAuthenticated";
 import NavbarAuthenticated from "./NavbarComponents/NavbarAuthenticated";
+import { useAuth } from "../context/authContext";
 
 const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado de autenticación
   const location = useLocation();
   const activeRoutes = {
     home: location.pathname === "/",
     exercises: location.pathname.includes("/exercises"),
     favorites: location.pathname === "/favorites",
   };
+
+  const { isAuthenticated } = useAuth();
 
   return (
     <Box
