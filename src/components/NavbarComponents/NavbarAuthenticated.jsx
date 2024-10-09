@@ -7,6 +7,7 @@ import {
   Settings as SettingsIcon,
   Menu as MenuIcon,
 } from "@mui/icons-material";
+import { useAuth } from "../../context/authContext";
 
 const ModalNavButton = styled(Button)(({ theme }) => ({
   borderBottom: "3px solid transparent",
@@ -20,6 +21,12 @@ const ModalNavButton = styled(Button)(({ theme }) => ({
 
 const NavbarAuthenticated = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { signout } = useAuth();
+
+  const CerrarSesion = async () => {
+    await signout();
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -79,9 +86,7 @@ const NavbarAuthenticated = () => {
             Configuración
           </ModalNavButton>
           <ModalNavButton
-            component={Link}
-            to="/logout"
-            onClick={() => setIsOpen(false)}
+            onClick={CerrarSesion}
             color="cultured"
             startIcon={<LogoutIcon style={{ fontSize: 35 }} />}
           >
