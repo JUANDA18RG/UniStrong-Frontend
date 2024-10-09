@@ -258,7 +258,7 @@ function Login() {
 
               <Box
                 component={Link}
-                to="/Register"
+                to="/ForgotPassword"
                 variant="body2"
                 color="inherit"
                 sx={{ display: "block", textAlign: "right", mt: 1 }}

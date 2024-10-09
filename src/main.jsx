@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import About from "./components/About";
 import Inicio from "./pages/Inicio";
+import ForgotPassword from "./components/ForgotPassword";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -24,6 +25,7 @@ root.render(
             <Route path="/" element={<App />}>
               <Route index element={<Home />} />
               <Route path="/Login" element={<Login />} />
+              <Route path="/ForgotPassword" element={<ForgotPassword />} />
               <Route path="/Register" element={<Register />} />
               <Route path="/About" element={<About />} />
               <Route path="*" element={<NoMatch />} />
