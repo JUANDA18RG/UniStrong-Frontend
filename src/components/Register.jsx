@@ -62,8 +62,6 @@ function Register() {
       await new Promise((resolve) => setTimeout(resolve, 500));
       console.info("Data", data);
       const response = await signup(data);
-      console.log("Response from signup:", response);
-
       if (response && response.status === 201) {
         enqueueSnackbar("Usuario registrado exitosamente", {
           variant: "success",

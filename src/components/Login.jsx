@@ -18,6 +18,7 @@ import { varRotate } from "./animate/variants/rotate";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { Alert } from "@mui/material";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -54,6 +55,7 @@ function Login() {
   const navigate = useNavigate();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -76,7 +78,11 @@ function Login() {
       }
       console.info("RESPONSE", response);
     } catch (error) {
-      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || // Mensaje personalizado del servidor
+        (typeof error === "string" ? error : error.message);
+      setError(errorMessage);
+      console.error("Error al iniciar sesion usuario", errorMessage);
     }
   };
 
@@ -224,6 +230,11 @@ function Login() {
               </Typography>
 
               {/* Form */}
+              {!!error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {error}
+                </Alert>
+              )}
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 <Box display="flex" flexDirection="column" gap={3}>
                   <TextField
