@@ -41,6 +41,15 @@ const schema = z.object({
     ),
 });
 
+const defaultValues = {
+  name: "",
+  dni: "",
+  email: "",
+  phoneNumber: "",
+  username: "",
+  password: "",
+};
+
 const metadata = { title: `Register |  ${CONFIG.appName}` };
 
 function Register() {
@@ -54,6 +63,7 @@ function Register() {
     formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues,
   });
   const [passwordVisible, setPasswordVisible] = useState(false);
 
