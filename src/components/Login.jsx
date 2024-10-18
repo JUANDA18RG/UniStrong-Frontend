@@ -41,6 +41,11 @@ const schema = z.object({
     ),
 });
 
+const defaultValues = {
+  email: "",
+  password: "",
+};
+
 function Login() {
   const {
     register,
@@ -48,6 +53,7 @@ function Login() {
     formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues,
   });
 
   const { signin, isAuthenticated } = useAuth();
