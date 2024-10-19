@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Stack, IconButton, Modal, Button, styled } from "@mui/material";
+import {
+  Stack,
+  IconButton,
+  Modal,
+  Button,
+  styled,
+  Box,
+  Typography,
+} from "@mui/material";
 import {
   AccountCircle as AccountCircleIcon,
   Logout as LogoutIcon,
@@ -21,7 +29,7 @@ const ModalNavButton = styled(Button)(({ theme }) => ({
 
 const NavbarAuthenticated = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { signout } = useAuth();
+  const { signout, User } = useAuth();
 
   const CerrarSesion = async () => {
     await signout();
@@ -36,13 +44,34 @@ const NavbarAuthenticated = () => {
         spacing={3}
         sx={{ display: { xs: "none", md: "flex" } }}
       >
-        <IconButton color="richBlack" onClick={() => setIsOpen(true)}>
-          <AccountCircleIcon fontSize="large" />
+        <IconButton onClick={() => setIsOpen(true)}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              padding: 1,
+              borderRadius: "50%",
+              border: "3px solid redRYB.main",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ color: "redRYB.main", fontWeight: 600, marginRight: 1 }}
+            >
+              {User.username}
+            </Typography>
+            <AccountCircleIcon
+              sx={{
+                color: "redRYB.main",
+              }}
+              fontSize="large"
+            />
+          </Box>
         </IconButton>
       </Stack>
       <IconButton
         onClick={() => setIsOpen(true)}
-        color="richBlack"
+        color="richBlack.main"
         size="large"
         sx={{
           display: { md: "none" },
