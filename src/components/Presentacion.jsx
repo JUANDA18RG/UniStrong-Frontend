@@ -27,7 +27,7 @@ function WelcomePage() {
         variants={varFade().in} // Utilizando correctamente varBounce
       >
         <Box
-          minHeight={{ xs: "calc(100vh - 70px)", sm: "calc(100vh - 80px)" }}
+          minHeight={{ xs: "calc(100vh)", sm: "calc(100vh)" }}
           sx={{
             position: "relative",
             width: "100%",
