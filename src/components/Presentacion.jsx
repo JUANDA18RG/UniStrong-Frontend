@@ -9,13 +9,6 @@ import { useState, useEffect } from "react";
 
 function WelcomePage() {
   const { User } = useAuth();
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    if (User) {
-      setUserName(User.username);
-    }
-  }, [User]);
 
   return (
     <Box>
@@ -65,7 +58,7 @@ function WelcomePage() {
                   component="span"
                   sx={{ color: "redRYB.main" }}
                 >
-                  {userName}
+                  {User.username}
                 </Typography>
                 !
               </Typography>

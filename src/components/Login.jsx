@@ -101,7 +101,7 @@ function Login() {
       <Grid
         container
         sx={{ overflow: "hidden" }}
-        maxHeight={{ xs: "calc(100vh - 70px)", sm: "calc(100vh - 80px)" }}
+        maxHeight={{ xs: "calc(100vh)", sm: "calc(100vh)" }}
       >
         {/* Left side: Background image with optional overlay */}
 
