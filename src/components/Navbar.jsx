@@ -9,7 +9,6 @@ import { useAuth } from "../context/authContext";
 const Navbar = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [currentDate, setCurrentDate] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,12 +19,6 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
-
-  useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toISOString().split("T")[0]; // Formato YYYY-MM-DD
-    setCurrentDate(formattedDate);
   }, []);
 
   const { isAuthenticated } = useAuth();
@@ -78,18 +71,7 @@ const Navbar = () => {
             </Typography>
           </Stack>
         </Button>
-        <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
-          <Typography variant="subtitle1" component="p">
-            Fecha de ingreso de usuario:
-            <Typography
-              variant="subtitle1"
-              component="span"
-              sx={{ color: "redRYB.main" }}
-            >
-              {` ${currentDate}`}
-            </Typography>
-          </Typography>
-        </Box>
+
         <Stack
           direction="row"
           alignItems="center"

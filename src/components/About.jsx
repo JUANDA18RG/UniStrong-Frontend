@@ -94,7 +94,7 @@ function About() {
         <Stack
           justifyContent="space-between"
           alignItems="center"
-          minHeight={{ xs: "calc(100vh - 100px)", sm: "calc(100vh - 90px)" }}
+          minHeight={{ xs: "calc(100vh )", sm: "calc(100vh)" }}
           sx={{
             backgroundColor: "cultured.main",
             padding: { xs: 3 },
@@ -104,7 +104,7 @@ function About() {
             overflow: "hidden",
           }}
         >
-          <Container maxWidth="xl">
+          <Container maxWidth="xl" sx={{ padding: 2, mt: 9 }}>
             <Grid container spacing={2}>
               {/* Carrusel en la esquina superior izquierda */}
               <Grid item xs={12} md={8}>

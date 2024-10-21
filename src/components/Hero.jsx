@@ -18,7 +18,7 @@ const Hero = () => {
         justifyContent="space-between"
         alignItems="center"
         spacing={3}
-        minHeight={{ xs: "calc(100vh - 70px)", sm: "calc(100vh - 80px)" }}
+        minHeight={{ xs: "calc(100vh)", sm: "calc(100vh)" }}
         sx={{
           background: `linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.1)), url(${BannerImage})`,
           backgroundSize: "cover",

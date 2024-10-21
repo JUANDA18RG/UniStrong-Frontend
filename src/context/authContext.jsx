@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 import {
@@ -7,8 +7,8 @@ import {
   registerRequest,
   logoutRequest,
 } from "../api/auth.js";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import ModaSesion from "../components/Modal.jsx";
 
 export const AuthContext = createContext();
 
@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
   const [User, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,19 +38,19 @@ export const AuthProvider = ({ children }) => {
       try {
         const res = await verifyTokenRequest(cookies.token);
         if (!res.data) {
+          setShowModal(true);
           setIsAuthenticated(false);
-          setUser(null);
-          navigate("/login");
+          Cookies.remove("token");
         } else {
           setUser(res.data.user);
           setIsAuthenticated(true);
         }
         setLoading(false);
       } catch (error) {
-        setIsAuthenticated(false);
+        setShowModal(true);
         setLoading(false);
+        setIsAuthenticated(false);
         console.error("Error al verificar el token:", error);
-        navigate("/login");
       }
     };
     checkLogin();
@@ -115,6 +116,7 @@ export const AuthProvider = ({ children }) => {
       }}
     >
       {children}
+      {showModal && <ModaSesion open={showModal} />}
     </AuthContext.Provider>
   );
 };
