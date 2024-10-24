@@ -56,7 +56,7 @@ function Login() {
     defaultValues,
   });
 
-  const { signin, isAuthenticated } = useAuth();
+  const { signin, isAuthenticated, typeUser } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
@@ -65,7 +65,15 @@ function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/Inicio");
+      if (typeUser === "cliente") {
+        navigate("/Inicio", { replace: true });
+      } else if (typeUser === "coach") {
+        navigate("/InicioEntrenador", { replace: true });
+      } else if (typeUser === "nutriologo") {
+        navigate("/InicioNutriologo", { replace: true });
+      }
+    } else {
+      navigate("/Login", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -73,6 +81,7 @@ function Login() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       const response = await signin(data);
+      console.log("Response from LoginRequest:", typeUser);
       if (response && response.status === 200) {
         enqueueSnackbar("Inicio de sesion exitoso", {
           variant: "success",

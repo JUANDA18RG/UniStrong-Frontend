@@ -15,8 +15,10 @@ const NoMatch = lazy(() => import("./pages/NoMatch"));
 const Login = lazy(() => import("./components/Login"));
 const Register = lazy(() => import("./components/Register"));
 const About = lazy(() => import("./components/About"));
-const Inicio = lazy(() => import("./pages/Inicio"));
-const User = lazy(() => import("./pages/User"));
+const Client = lazy(() => import("./sections/Client"));
+const User = lazy(() => import("./sections/User"));
+const Entrenador = lazy(() => import("./sections/Entrenador"));
+const Nutriologo = lazy(() => import("./sections/Nutriologo"));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -37,7 +39,15 @@ root.render(
                     <Route path="/About" element={<About />} />
                     <Route path="*" element={<NoMatch />} />
                     <Route element={<ProtectedRoute />}>
-                      <Route path="/Inicio" element={<Inicio />} />
+                      <Route path="/Inicio" element={<Client />} />
+                      <Route
+                        path="/InicioEntrenador"
+                        element={<Entrenador />}
+                      />
+                      <Route
+                        path="/InicioNutriologo"
+                        element={<Nutriologo />}
+                      />
                       <Route path="/user/:id" element={<User />} />
                     </Route>
                   </Route>
