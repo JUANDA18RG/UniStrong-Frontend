@@ -131,6 +131,7 @@ function Register() {
               sx={{
                 maxWidth: 500,
                 width: "100%",
+                mt: 8,
                 padding: {
                   xs: 2,
                   sm: 4,
