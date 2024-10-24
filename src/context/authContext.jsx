@@ -88,8 +88,8 @@ export const AuthProvider = ({ children }) => {
 
   const signout = async () => {
     try {
-      await logoutRequest();
       Cookies.remove("token");
+      await logoutRequest();
       setUser(null);
       setIsAuthenticated(false);
     } catch (error) {
