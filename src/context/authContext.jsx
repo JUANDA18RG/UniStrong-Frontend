@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [typeUser, setTypeUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +63,8 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.user);
       console.log("Response from LoginRequest:", response.data.user);
       setIsAuthenticated(true);
+      setTypeUser(response.data.user.userType);
+      console.log("tipo de usuario", response.data.user.userType);
       return response;
     } catch (error) {
       console.error(
@@ -88,8 +91,9 @@ export const AuthProvider = ({ children }) => {
 
   const signout = async () => {
     try {
-      await logoutRequest();
       Cookies.remove("token");
+      navigate("/");
+      await logoutRequest();
       setUser(null);
       setIsAuthenticated(false);
     } catch (error) {
@@ -113,6 +117,7 @@ export const AuthProvider = ({ children }) => {
         signin,
         signup,
         signout,
+        typeUser,
       }}
     >
       {children}
