@@ -20,7 +20,6 @@ const User = lazy(() => import("./sections/User"));
 const Entrenador = lazy(() => import("./sections/Entrenador"));
 const Nutriologo = lazy(() => import("./sections/Nutriologo"));
 const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -53,7 +52,6 @@ root.render(
                     </Route>
                     <Route path="/validacion" element={<PageValidacion />} />
                   </Route>
-                  
                 </Routes>
               </Suspense>
             </SnackbarProvider>

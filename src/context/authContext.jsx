@@ -25,7 +25,11 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [typeUser,isVerified, setIsVerified, setTypeUser] = useState(null);
+  const [isVerified, setIsVerified] = useState(null);
+  const [typeUser, setTypeUser] = useState(null);
+  const [hasRedirected, setHasRedirected] = useState(false);
+
+
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -45,6 +49,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           setUser(res.data.user);
           setIsAuthenticated(true);
+          setIsVerified(res.data.user.state); // Asegúrate de establecer isVerified aquí
         }
         setLoading(false);
       } catch (error) {
@@ -56,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     };
     checkLogin();
   }, [navigate]);
-
+  
   const signin = async (user) => {
     try {
       const response = await LoginRequest(user);
@@ -67,6 +72,14 @@ export const AuthProvider = ({ children }) => {
       console.log("Estado de validación:", response.data.user.state);
       setTypeUser(response.data.user.userType);
       console.log("tipo de usuario", response.data.user.userType);
+
+      // Redireccionar a la página de validación si el estado es false
+    if (response.data.user.state === false) {
+      navigate("/validacion");
+    }else {
+      // Redireccionar a la página de inicio si el estado es true
+      navigate("/Inicio");
+    }
       return response;
     } catch (error) {
       console.error(
@@ -76,6 +89,14 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
+
+  // Efecto para manejar la redirección al inicio si isVerified es true
+  useEffect(() => {
+    if (isVerified === true && !hasRedirected) {
+      setHasRedirected(true); // Marca que ya se redirigió
+      navigate("/Inicio");
+    }
+  }, [isVerified, navigate, hasRedirected]);
 
   const signup = async (user) => {
     try {
