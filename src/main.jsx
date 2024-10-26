@@ -17,6 +17,7 @@ const Register = lazy(() => import("./components/Register"));
 const About = lazy(() => import("./components/About"));
 const Inicio = lazy(() => import("./pages/Inicio"));
 const User = lazy(() => import("./pages/User"));
+const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -40,6 +41,7 @@ root.render(
                       <Route path="/Inicio" element={<Inicio />} />
                       <Route path="/user/:id" element={<User />} />
                     </Route>
+                    <Route path="/validacion" element={<PageValidacion />} />
                   </Route>
                 </Routes>
               </Suspense>
