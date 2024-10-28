@@ -16,7 +16,6 @@ import { varBounce } from "./animate/variants/bounce";
 import { varFade } from "./animate/variants/fade";
 import { varRotate } from "./animate/variants/rotate";
 import { useAuth } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { Alert } from "@mui/material";
 import { z } from "zod";
@@ -56,26 +55,10 @@ function Login() {
     defaultValues,
   });
 
-  const { signin, isAuthenticated, typeUser } = useAuth();
+  const { signin } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      if (typeUser === "cliente") {
-        navigate("/Inicio", { replace: true });
-      } else if (typeUser === "coach") {
-        navigate("/InicioEntrenador", { replace: true });
-      } else if (typeUser === "nutriologo") {
-        navigate("/InicioNutriologo", { replace: true });
-      }
-    } else {
-      navigate("/Login", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
 
   const onSubmit = async (data) => {
     try {

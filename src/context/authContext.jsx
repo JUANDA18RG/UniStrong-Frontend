@@ -27,11 +27,9 @@ export const AuthProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [isVerified, setIsVerified] = useState(null);
   const [typeUser, setTypeUser] = useState(null);
-  const [hasRedirected, setHasRedirected] = useState(false);
-
 
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const checkLogin = async () => {
       const cookies = Cookies.get();
@@ -61,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     };
     checkLogin();
   }, [navigate]);
-  
+
   const signin = async (user) => {
     try {
       const response = await LoginRequest(user);
@@ -74,12 +72,12 @@ export const AuthProvider = ({ children }) => {
       console.log("tipo de usuario", response.data.user.userType);
 
       // Redireccionar a la página de validación si el estado es false
-    if (response.data.user.state === false) {
-      navigate("/validacion");
-    }else {
-      // Redireccionar a la página de inicio si el estado es true
-      navigate("/Inicio");
-    }
+      if (response.data.user.state === false) {
+        navigate("/validacion");
+      } else {
+        // Redireccionar a la página de inicio si el estado es true
+        navigate("/Inicio");
+      }
       return response;
     } catch (error) {
       console.error(
@@ -91,12 +89,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Efecto para manejar la redirección al inicio si isVerified es true
-  useEffect(() => {
-    if (isVerified === true && !hasRedirected) {
-      setHasRedirected(true); // Marca que ya se redirigió
-      navigate("/Inicio");
-    }
-  }, [isVerified, navigate, hasRedirected]);
 
   const signup = async (user) => {
     try {
