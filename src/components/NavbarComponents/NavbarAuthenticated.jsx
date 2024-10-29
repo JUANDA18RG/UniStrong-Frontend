@@ -13,10 +13,10 @@ import {
 import {
   AccountCircle as AccountCircleIcon,
   Logout as LogoutIcon,
-  Settings as SettingsIcon,
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import { useAuth } from "../../context/authContext";
+import { useSnackbar } from "notistack";
 
 import HomeIcon from "@mui/icons-material/Home";
 
@@ -34,9 +34,19 @@ const NavbarAuthenticated = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { signout, User } = useAuth();
   const [currentDate, setCurrentDate] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const CerrarSesion = async () => {
-    await signout();
+    const response = await signout();
+    if (response && response.status === 200) {
+      enqueueSnackbar("Inicio de sesion exitoso", {
+        variant: "success",
+      });
+    } else {
+      enqueueSnackbar("Error al iniciar sesion usuario", {
+        variant: "error",
+      });
+    }
     setIsOpen(false);
   };
 

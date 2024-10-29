@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           setUser(res.data.user);
           setIsAuthenticated(true);
-          setIsVerified(res.data.user.state); // Asegúrate de establecer isVerified aquí
+          setIsVerified(res.data.user.state);
         }
         setLoading(false);
       } catch (error) {
@@ -66,18 +66,10 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.user);
       console.log("Response from LoginRequest:", response.data.user);
       setIsAuthenticated(true);
-      setIsVerified(response.data.user.state); // Actualizar estado de validación
+      setIsVerified(response.data.user.state);
       console.log("Estado de validación:", response.data.user.state);
       setTypeUser(response.data.user.userType);
       console.log("tipo de usuario", response.data.user.userType);
-
-      // Redireccionar a la página de validación si el estado es false
-      if (response.data.user.state === false) {
-        navigate("/validacion");
-      } else {
-        // Redireccionar a la página de inicio si el estado es true
-        navigate("/Inicio");
-      }
       return response;
     } catch (error) {
       console.error(
@@ -106,11 +98,11 @@ export const AuthProvider = ({ children }) => {
 
   const signout = async () => {
     try {
+      const res = await logoutRequest();
       Cookies.remove("token");
-      navigate("/");
-      await logoutRequest();
       setUser(null);
       setIsAuthenticated(false);
+      return res;
     } catch (error) {
       if (error.response && error.response.status === 401) {
         console.error("Error 401: No autorizado. No se pudo cerrar sesión.");
