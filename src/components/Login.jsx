@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -55,16 +55,29 @@ function Login() {
     defaultValues,
   });
 
-  const { signin } = useAuth();
+  const { signin, isAuthenticated, typeUser } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  if (isAuthenticated && typeUser) {
+    switch (typeUser) {
+      case "cliente":
+        return navigate("/Inicio", { replace: true });
+      case "coach":
+        return navigate("/InicioEntrenador", { replace: true });
+      case "nutriologo":
+        return navigate("/InicioNutriologo", { replace: true });
+      default:
+        return navigate("/Inicio", { replace: true });
+    }
+  }
 
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       const response = await signin(data);
-      console.log("Response from LoginRequest:", typeUser);
       if (response && response.status === 200) {
         enqueueSnackbar("Inicio de sesion exitoso", {
           variant: "success",
