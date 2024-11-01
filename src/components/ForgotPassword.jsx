@@ -14,14 +14,39 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-// Asegúrate de que esto esté bien configurado
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useVerification } from "../context/VerificationContext";
+import { Helmet } from "react-helmet-async";
+
+
+//Validación
+const schema = z.object({
+  email: z.string().email("Correo electrónico inválido"),
+  password: z
+    .string()
+    .min(10, "Contraseña debe tener al menos 8 caracteres")
+    .regex(/[A-Z]/, "Contraseña debe tener al menos una letra mayúscula")
+    .regex(/[a-z]/, "Contraseña debe tener al menos una letra minúscula")
+    .regex(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Contraseña debe tener al menos un carácter especial"
+    ),
+});
+const metadata = { title: `ForgotPassword |  ${CONFIG.appName}` };
 
 function ForgotPassword() {
 
+  const { loading, requestPasswordCode, verifyCodeAndResetPassword } = useVerification();
   const [activeStep, setActiveStep] = useState(0);
   const steps = ['Ingresa tu email', 'Verifica tu email', 'Cambia tu contraseña'];
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordVisible1, setPasswordVisible1] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -31,27 +56,7 @@ function ForgotPassword() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
    };
 
-   const validateForm = () => {
-
-    if (activeStep == 0){
-      if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/) { //falta
-        newErrors.email = 'Debes ingresar un correo válido';
-        isValid = false;
-      } else if (activeStep == 2) {
-
-        const expresionContraseña =/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%*^&_+=!.-]).{8,}$/; //comparar con el backend si tenemso los mismo caracteres especiales
-
-        if (!expresionContraseña ){
-
-        }
-
-      }
-
-
-    }
-    //mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
-    
-    }
+   
    
 
 
@@ -70,6 +75,10 @@ function ForgotPassword() {
   };
 
     return (
+     <>
+      <Helmet>
+        <title> {metadata.title}</title>
+      </Helmet>
         <Grid
           container
           sx={{ overflow: "hidden" }}
@@ -532,6 +541,7 @@ function ForgotPassword() {
             </motion.div>
           </Grid>
         </Grid>
+       </>
       ); 
 }
 

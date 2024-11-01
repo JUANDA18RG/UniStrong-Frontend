@@ -8,6 +8,7 @@ import {
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import { useAuth } from "../../context/authContext";
+import Settings from "../Settings";
 
 const ModalNavButton = styled(Button)(({ theme }) => ({
   borderBottom: "3px solid transparent",

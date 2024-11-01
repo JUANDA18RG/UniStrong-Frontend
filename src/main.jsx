@@ -6,6 +6,7 @@ import App from "./App";
 import theme from "./theme";
 import { SnackbarProvider } from "notistack";
 import { AuthProvider } from "./context/authContext";
+import { VerificationProvider } from "./context/VerificationContext"; 
 import { ProtectedRoute } from "./routes";
 import { HelmetProvider } from "react-helmet-async";
 import Loading from "./components/Loading";
@@ -16,6 +17,9 @@ const Login = lazy(() => import("./components/Login"));
 const Register = lazy(() => import("./components/Register"));
 const About = lazy(() => import("./components/About"));
 const Inicio = lazy(() => import("./pages/Inicio"));
+const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
+const Settings = lazy(() => import("./components/Settings"));
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -23,6 +27,7 @@ root.render(
   <BrowserRouter>
     <HelmetProvider>
       <AuthProvider>
+
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <SnackbarProvider>
@@ -33,6 +38,8 @@ root.render(
                   <Route path="/Login" element={<Login />} />
                   <Route path="/Register" element={<Register />} />
                   <Route path="/About" element={<About />} />
+                  <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                  <Route path="/Settings" element={<Settings />} /> 
                   <Route path="*" element={<NoMatch />} />
                   <Route element={<ProtectedRoute />}>
                     <Route path="/Inicio" element={<Inicio />} />
@@ -42,6 +49,7 @@ root.render(
             </Suspense>
           </SnackbarProvider>
         </ThemeProvider>
+    
       </AuthProvider>
     </HelmetProvider>
   </BrowserRouter>
