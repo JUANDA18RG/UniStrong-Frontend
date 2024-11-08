@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -16,8 +16,8 @@ import { varBounce } from "./animate/variants/bounce";
 import { varFade } from "./animate/variants/fade";
 import { varRotate } from "./animate/variants/rotate";
 import { useAuth } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { Alert } from "@mui/material";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -40,6 +40,11 @@ const schema = z.object({
     ),
 });
 
+const defaultValues = {
+  email: "",
+  password: "",
+};
+
 function Login() {
   const {
     register,
@@ -47,19 +52,27 @@ function Login() {
     formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues,
   });
 
-  const { signin, isAuthenticated } = useAuth();
+  const { signin, isAuthenticated, typeUser } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const [passwordVisible, setPasswordVisible] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/Inicio");
+  if (isAuthenticated && typeUser) {
+    switch (typeUser) {
+      case "cliente":
+        return navigate("/Inicio", { replace: true });
+      case "coach":
+        return navigate("/InicioEntrenador", { replace: true });
+      case "nutriologo":
+        return navigate("/InicioNutriologo", { replace: true });
+      default:
+        return navigate("/Inicio", { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }
 
   const onSubmit = async (data) => {
     try {
@@ -76,7 +89,11 @@ function Login() {
       }
       console.info("RESPONSE", response);
     } catch (error) {
-      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || // Mensaje personalizado del servidor
+        (typeof error === "string" ? error : error.message);
+      setError(errorMessage);
+      console.error("Error al iniciar sesion usuario", errorMessage);
     }
   };
 
@@ -89,7 +106,7 @@ function Login() {
       <Grid
         container
         sx={{ overflow: "hidden" }}
-        maxHeight={{ xs: "calc(100vh - 70px)", sm: "calc(100vh - 80px)" }}
+        maxHeight={{ xs: "calc(100vh)", sm: "calc(100vh)" }}
       >
         {/* Left side: Background image with optional overlay */}
 
@@ -173,6 +190,7 @@ function Login() {
               sx={{
                 maxWidth: 500,
                 width: "100%",
+                mt: 8,
                 padding: {
                   xs: 2,
                   sm: 4,
@@ -224,6 +242,11 @@ function Login() {
               </Typography>
 
               {/* Form */}
+              {!!error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {error}
+                </Alert>
+              )}
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 <Box display="flex" flexDirection="column" gap={3}>
                   <TextField

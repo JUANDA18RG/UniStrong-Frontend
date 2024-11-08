@@ -9,13 +9,6 @@ import { useState, useEffect } from "react";
 
 function WelcomePage() {
   const { User } = useAuth();
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    if (User) {
-      setUserName(User.username);
-    }
-  }, [User]);
 
   return (
     <Box>
@@ -27,7 +20,7 @@ function WelcomePage() {
         variants={varFade().in} // Utilizando correctamente varBounce
       >
         <Box
-          minHeight={{ xs: "calc(100vh - 70px)", sm: "calc(100vh - 80px)" }}
+          minHeight={{ xs: "calc(100vh)", sm: "calc(100vh)" }}
           sx={{
             position: "relative",
             width: "100%",
@@ -65,7 +58,7 @@ function WelcomePage() {
                   component="span"
                   sx={{ color: "redRYB.main" }}
                 >
-                  {userName}
+                  {User.username}
                 </Typography>
                 !
               </Typography>

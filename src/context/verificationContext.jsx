@@ -33,27 +33,41 @@ export const VerificationProvider = ({ children }) => {
     }
   };
 
-  const verifyCodeAndResetPassword = async (email, code, newPassword) => {
+  const verifyCode = async (email, code) => {
     setLoading(true);
     try {
-      await verifyCodeRequest(email, code); // Verificar el código primero
-      const response = await changePasswordRequest(email, newPassword);
-      console.log("Contraseña restablecida:", response);
-      return response;
+      const response = await verifyCodeRequest(email, code);
+      console.log("Código verificado correctamente:", response);
+      return response; // Retorna la respuesta para el manejo posterior
     } catch (error) {
-      console.error("Error al cambiar la contraseña:", error);
+      console.error("Error al verificar el código:", error);
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
+      const changePassword = async (email, password) => {
+        setLoading(true);
+        try {
+            const response = await changePasswordRequest(email, password);
+            console.log("Contraseña restablecida:", response);
+            return response;
+        } catch (error) {
+           console.error("Error al cambiar la contraseña:", error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
   return (
     <VerificationContext.Provider
       value={{
         loading,
         requestPasswordCode,
-        verifyCodeAndResetPassword,
+        verifyCode,
+        changePassword
       }}
     >
       {children}

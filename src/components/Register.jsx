@@ -41,6 +41,15 @@ const schema = z.object({
     ),
 });
 
+const defaultValues = {
+  name: "",
+  dni: "",
+  email: "",
+  phoneNumber: "",
+  username: "",
+  password: "",
+};
+
 const metadata = { title: `Register |  ${CONFIG.appName}` };
 
 function Register() {
@@ -54,6 +63,7 @@ function Register() {
     formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues,
   });
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -62,8 +72,6 @@ function Register() {
       await new Promise((resolve) => setTimeout(resolve, 500));
       console.info("Data", data);
       const response = await signup(data);
-      console.log("Response from signup:", response);
-
       if (response && response.status === 201) {
         enqueueSnackbar("Usuario registrado exitosamente", {
           variant: "success",
@@ -95,7 +103,7 @@ function Register() {
       <Grid
         container
         sx={{ overflow: "hidden" }}
-        maxHeight={{ xs: "calc(100vh - 70px)", sm: "calc(100vh - 80px)" }}
+        maxHeight={{ xs: "calc(100vh)", sm: "calc(100vh)" }}
       >
         {/* Left side: Background image with optional overlay */}
         <Grid
@@ -123,6 +131,7 @@ function Register() {
               sx={{
                 maxWidth: 500,
                 width: "100%",
+                mt: 8,
                 padding: {
                   xs: 2,
                   sm: 4,

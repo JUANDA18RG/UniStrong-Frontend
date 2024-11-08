@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 import {
@@ -7,8 +7,8 @@ import {
   registerRequest,
   logoutRequest,
 } from "../api/auth.js";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import ModaSesion from "../components/Modal.jsx";
 
 export const AuthContext = createContext();
 
@@ -24,6 +24,10 @@ export const AuthProvider = ({ children }) => {
   const [User, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [isVerified, setIsVerified] = useState(null);
+  const [typeUser, setTypeUser] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,19 +41,20 @@ export const AuthProvider = ({ children }) => {
       try {
         const res = await verifyTokenRequest(cookies.token);
         if (!res.data) {
+          setShowModal(true);
           setIsAuthenticated(false);
-          setUser(null);
-          navigate("/login");
+          Cookies.remove("token");
         } else {
           setUser(res.data.user);
           setIsAuthenticated(true);
+          setIsVerified(res.data.user.state);
         }
         setLoading(false);
       } catch (error) {
-        setIsAuthenticated(false);
+        setShowModal(true);
         setLoading(false);
+        setIsAuthenticated(false);
         console.error("Error al verificar el token:", error);
-        navigate("/login");
       }
     };
     checkLogin();
@@ -61,6 +66,10 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.user);
       console.log("Response from LoginRequest:", response.data.user);
       setIsAuthenticated(true);
+      setIsVerified(response.data.user.state);
+      console.log("Estado de validación:", response.data.user.state);
+      setTypeUser(response.data.user.userType);
+      console.log("tipo de usuario", response.data.user.userType);
       return response;
     } catch (error) {
       console.error(
@@ -70,6 +79,8 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
+
+  // Efecto para manejar la redirección al inicio si isVerified es true
 
   const signup = async (user) => {
     try {
@@ -87,10 +98,11 @@ export const AuthProvider = ({ children }) => {
 
   const signout = async () => {
     try {
-      await logoutRequest();
+      const res = await logoutRequest();
       Cookies.remove("token");
       setUser(null);
       setIsAuthenticated(false);
+      return res;
     } catch (error) {
       if (error.response && error.response.status === 401) {
         console.error("Error 401: No autorizado. No se pudo cerrar sesión.");
@@ -112,9 +124,12 @@ export const AuthProvider = ({ children }) => {
         signin,
         signup,
         signout,
+        isVerified,
+        typeUser,
       }}
     >
       {children}
+      {showModal && <ModaSesion open={showModal} />}
     </AuthContext.Provider>
   );
 };

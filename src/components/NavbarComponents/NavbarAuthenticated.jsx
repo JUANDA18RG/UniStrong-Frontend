@@ -1,14 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Stack, IconButton, Modal, Button, styled } from "@mui/material";
+import {
+  Stack,
+  IconButton,
+  Modal,
+  Button,
+  styled,
+  Box,
+  Typography,
+  Avatar,
+} from "@mui/material";
 import {
   AccountCircle as AccountCircleIcon,
   Logout as LogoutIcon,
-  Settings as SettingsIcon,
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import { useAuth } from "../../context/authContext";
-import Settings from "../Settings";
+import { useSnackbar } from "notistack";
+
+import HomeIcon from "@mui/icons-material/Home";
 
 const ModalNavButton = styled(Button)(({ theme }) => ({
   borderBottom: "3px solid transparent",
@@ -22,28 +32,86 @@ const ModalNavButton = styled(Button)(({ theme }) => ({
 
 const NavbarAuthenticated = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { signout } = useAuth();
+  const { signout, User } = useAuth();
+  const [currentDate, setCurrentDate] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const CerrarSesion = async () => {
-    await signout();
+    const response = await signout();
+    if (response && response.status === 200) {
+      enqueueSnackbar("Inicio de sesion exitoso", {
+        variant: "success",
+      });
+    } else {
+      enqueueSnackbar("Error al iniciar sesion usuario", {
+        variant: "error",
+      });
+    }
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    setCurrentDate(formattedDate);
+  }, []);
 
   return (
     <>
       <Stack
         direction="row"
         alignItems="center"
+        spacing={2}
+        sx={{ flexGrow: 1, justifyContent: "flex-start" }}
+      >
+        <Typography variant="subtitle1" component="p">
+          Fecha de ingreso de usuario:
+          <Typography
+            variant="subtitle1"
+            component="span"
+            sx={{ color: "redRYB.main" }}
+          >
+            {` ${currentDate}`}
+          </Typography>
+        </Typography>
+      </Stack>
+      <Stack
+        direction="row"
+        alignItems="center"
         spacing={3}
         sx={{ display: { xs: "none", md: "flex" } }}
       >
-        <IconButton color="richBlack" onClick={() => setIsOpen(true)}>
-          <AccountCircleIcon fontSize="large" />
+        <IconButton onClick={() => setIsOpen(true)}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              padding: 1,
+              borderRadius: "50%",
+              border: "3px solid redRYB.main",
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 35,
+                height: 35,
+                bgcolor: "redRYB.main",
+              }}
+            >
+              {User.username.charAt(0)}
+            </Avatar>
+            <Typography
+              variant="h6"
+              sx={{ color: "redRYB.main", fontWeight: 600, marginLeft: 1 }}
+            >
+              {User.username}
+            </Typography>
+          </Box>
         </IconButton>
       </Stack>
       <IconButton
         onClick={() => setIsOpen(true)}
-        color="richBlack"
+        color="richBlack.main"
         size="large"
         sx={{
           display: { md: "none" },
@@ -70,21 +138,21 @@ const NavbarAuthenticated = () => {
         >
           <ModalNavButton
             component={NavLink}
-            to="/profile"
+            to="/Inicio"
+            onClick={() => setIsOpen(false)}
+            color="cultured"
+            startIcon={<HomeIcon style={{ fontSize: 35 }} />}
+          >
+            Inicio
+          </ModalNavButton>
+          <ModalNavButton
+            component={NavLink}
+            to={`/user/${User.id}`}
             onClick={() => setIsOpen(false)}
             color="cultured"
             startIcon={<AccountCircleIcon style={{ fontSize: 35 }} />}
           >
             Perfil
-          </ModalNavButton>
-          <ModalNavButton
-            component={NavLink}
-            to="/settings"
-            onClick={() => setIsOpen(false)}
-            color="cultured"
-            startIcon={<SettingsIcon style={{ fontSize: 35 }} />}
-          >
-            Configuración
           </ModalNavButton>
           <ModalNavButton
             onClick={CerrarSesion}

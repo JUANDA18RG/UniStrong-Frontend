@@ -1,54 +1,48 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import Box from "@mui/material/Box";
 import { FormDivider } from "./LoginComponents/form-divider";
-import {Step, StepLabel, Stepper, Button, TextField, Grid, Typography } from "@mui/material";
+import {Button, TextField, Grid, Typography } from "@mui/material";
 import Logo from "../assets/images/Logo1.png";
 import BackgroundImage from "../assets/images/BannerLogin.jpg";
-import { motion } from "framer-motion"; // Cambiado a "motion"
-import { varBounce } from "./animate/variants/bounce"; // Asegúrate de que esto esté bien configurado
+import { motion } from "framer-motion"; 
+import { varBounce } from "./animate/variants/bounce"; 
 import { varFade } from "./animate/variants/fade";
 import { varRotate } from "./animate/variants/rotate";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useSnackbar } from "notistack";
+import { CONFIG } from "../config-global";
 import { useVerification } from "../context/VerificationContext";
 import { Helmet } from "react-helmet-async";
 
 
-//Validación
-const schema = z.object({
-  email: z.string().email("Correo electrónico inválido"),
-  password: z
-    .string()
-    .min(10, "Contraseña debe tener al menos 8 caracteres")
-    .regex(/[A-Z]/, "Contraseña debe tener al menos una letra mayúscula")
-    .regex(/[a-z]/, "Contraseña debe tener al menos una letra minúscula")
-    .regex(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Contraseña debe tener al menos un carácter especial"
-    ),
-});
-const metadata = { title: `ForgotPassword |  ${CONFIG.appName}` };
+
+const metadata = { title: `ForgotPasword |  ${CONFIG.appName}` };
 
 function ForgotPassword() {
-
-  const { loading, requestPasswordCode, verifyCodeAndResetPassword } = useVerification();
+  const { requestPasswordCode, verifyCode, changePassword } = useVerification();
   const [activeStep, setActiveStep] = useState(0);
   const steps = ['Ingresa tu email', 'Verifica tu email', 'Cambia tu contraseña'];
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordVisible1, setPasswordVisible1] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [password, setpassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+
 
   const handleNext = () => {
+    setErrorMsg(''); 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
    };
     
@@ -56,28 +50,86 @@ function ForgotPassword() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
    };
 
-   
-   
 
-
-   const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Lógica de envío según el paso actual
-    if (activeStep === 0) {
-      // Aquí maneja el envío del email
-      handleNext();
-    } else if (activeStep === 1) {
-      // Aquí maneja la verificación del código
-      handleNext();
-    } else if (activeStep === 2) {
-      // Aquí maneja el cambio de contraseña
-    }
+  const validateEmail = (email) => {
+    return !email || !emailRegex.test(email);
   };
 
+  const validateCode = (code) => {
+    if (!code || code.trim() === "") {
+      return "El código no puede estar vacío";
+    }
+    if (code.length !== 6) {
+      return "El código debe tener exactamente 6 caracteres";
+    }
+    return null;
+  };
+  
+  
+  const validatePassword = (password, confirmPassword) => {
+    if (!password || !passwordRegex.test(password)) {
+      return "La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial";
+    }
+    if (password !== confirmPassword) {
+      return "Las contraseñas no coinciden";
+    }
+    return null;
+  };
+
+  
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Email enviado:', email);
+    setIsLoading(true);
+
+    try {
+        
+        if (validateEmail(email)) {
+            setErrorMsg('Por favor ingresa un correo electrónico válido');
+            return;
+        }
+        if (activeStep === 0) {
+            const response = await requestPasswordCode(email);
+            enqueueSnackbar(response.data.message, { variant: 'success' });
+            handleNext();
+        } else if (activeStep === 1) {
+          const codeError = validateCode(code);
+          if (codeError) {
+            setErrorMsg(codeError);
+            return;
+          }
+            const response = await verifyCode(email, code);
+            enqueueSnackbar(response.data.message, { variant: 'success' });
+            handleNext();
+        } else if (activeStep === 2) {
+            const passwordError = validatePassword(password, confirmPassword);
+            if (passwordError) {
+                setErrorMsg(passwordError);
+                return;
+            }
+            const response = await changePassword(email, password);
+            enqueueSnackbar(response.data.message, { variant: 'success' });
+            console.log('Nuevo password:', password);
+            navigate('/login');
+        }
+    } catch (error) {
+        console.error(error);
+        const errorMessage =
+            error.response?.data?.message || (typeof error === 'string' ? error : error.message);
+        setErrorMsg(errorMessage);
+        enqueueSnackbar(`Error: ${errorMessage}`, { variant: 'error' });
+        console.log('Error:', errorMessage);
+    } finally {
+        setIsLoading(false);
+    }
+};
+
+  
     return (
      <>
       <Helmet>
-        <title> {metadata.title}</title>
+      <title>{metadata.title}</title>
       </Helmet>
         <Grid
           container
@@ -170,201 +222,75 @@ function ForgotPassword() {
                   name="email"
                   label="Email Address"
                   placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   InputLabelProps={{ shrink: true }}
                   fullWidth
                   variant="outlined"
+                  error={!!errorMsg}  // Indica si hay un error
+                  helperText={errorMsg}
                   sx={{
                     backgroundColor: "#f4f4f9",
                     borderRadius: 2,
                     "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "gray",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "blue",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "redRYB.main",
-                      },
-                      "&.Mui-error fieldset": {
-                        borderColor: "red",
-                      },
+                      "& fieldset": { borderColor: "gray" },
+                      "&:hover fieldset": { borderColor: "blue" },
+                      "&.Mui-focused fieldset": { borderColor: "redRYB.main" },
+                      "&.Mui-error fieldset": { borderColor: "red" },
                     },
                   }}
                 />
              )}
               {activeStep === 1 && (
-                  <Box display="flex" flexDirection="column" gap={2}>
-                  <Typography
-                    variant="h1"
-                    sx={{
-                      fontSize: {
-                        xs: '0.875rem', sm: '1rem', md: '1.125rem', lg: '1.25rem',   
-                      },
-                    }}
-                  >
-                    Please enter the code sent to your email address
-                  </Typography>
-
-                    <Box display="flex" gap={2}>
-                        <TextField
-                        name="code1"
-                        placeholder="0"
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        variant="outlined"
-                        sx={{
-                          backgroundColor: "#f4f4f9",
-                          borderRadius: 2,
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "gray",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "redRYB.main",
-                            },
-                            "&.Mui-error fieldset": {
-                              borderColor: "red",
-                            },
-                          },
-                        }}
-                        />
-                        <TextField
-                        name="code2"
-                        placeholder="0"
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        variant="outlined"
-                        sx={{
-                          backgroundColor: "#f4f4f9",
-                          borderRadius: 2,
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "gray",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "redRYB.main",
-                            },
-                            "&.Mui-error fieldset": {
-                              borderColor: "red",
-                            },
-                          },
-                        }}
-                        />
-                        <TextField
-                        name="code3"
-                        placeholder="0"
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        variant="outlined"
-                        sx={{
-                          backgroundColor: "#f4f4f9",
-                          borderRadius: 2,
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "gray",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "redRYB.main",
-                            },
-                            "&.Mui-error fieldset": {
-                              borderColor: "red",
-                            },
-                          },
-                        }}
-                        />
-                        <TextField
-                        name="code4"
-                        placeholder="0"
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        variant="outlined"
-                        sx={{
-                          backgroundColor: "#f4f4f9",
-                          borderRadius: 2,
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "gray",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "redRYB.main",
-                            },
-                            "&.Mui-error fieldset": {
-                              borderColor: "red",
-                            },
-                          },
-                        }}
-                        />
-                        <TextField
-                        name="code5"
-                        placeholder="0"
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        variant="outlined"
-                        sx={{
-                          backgroundColor: "#f4f4f9",
-                          borderRadius: 2,
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "gray",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "redRYB.main",
-                            },
-                            "&.Mui-error fieldset": {
-                              borderColor: "red",
-                            },
-                          },
-                        }}
-                        />
-                        <TextField
-                        name="code6"
-                        placeholder="0"
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        variant="outlined"
-                        sx={{
-                          backgroundColor: "#f4f4f9",
-                          borderRadius: 2,
-                          "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "gray",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "redRYB.main",
-                            },
-                            "&.Mui-error fieldset": {
-                              borderColor: "red",
-                            },
-                          },
-                        }}
-                        />
+              <Box display="flex" flexDirection="column" gap={2}>
+                <Typography variant="h1" sx={{ fontSize: { xs: '0.875rem', sm: '1rem', md: '1.125rem', lg: '1.25rem' } }}>
+                  Please enter the code sent to your email address
+                </Typography>
+                <Box display="flex" gap={2}>
+                  {['code1', 'code2', 'code3', 'code4', 'code5', 'code6'].map((name, index) => (
+                    <TextField
+                      key={index}
+                      name={name}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="0"
+                      value={code.charAt(index)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) {
+                          setCode(code.substring(0, index) + value + code.substring(index + 1));
+                        }
+                      }}
+                      InputLabelProps={{ shrink: true }}
+                      fullWidth
+                      variant="outlined"
+                      sx={{
+                        backgroundColor: "#f4f4f9",
+                        borderRadius: 2,
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "gray" },
+                          "&:hover fieldset": { borderColor: "blue" },
+                          "&.Mui-focused fieldset": { borderColor: "redRYB.main" },
+                          "&.Mui-error fieldset": { borderColor: "red" },
+                        },
+                      }}
+                    />
+                  ))}
                     </Box>
+                    {errorMsg && (
+                  <Typography color="error" sx={{ marginTop: -2, marginBottom: 1,  width: '100%' }}>
+                    {errorMsg}
+                  </Typography>
+                )}
                   </Box>
                     )}
                     {activeStep === 2 && (
                     <Box display="flex" flexDirection="column" gap={2}>
                         <TextField
-                        name="newPassword"
+                        name="password"
                         label="New Password"
+                        value={password}
+                        onChange={(e) => setpassword(e.target.value)}
                         type={passwordVisible ? "text" : "password"}
                         placeholder="Enter your new password"
                         InputLabelProps={{ shrink: true }}
@@ -374,18 +300,10 @@ function ForgotPassword() {
                           backgroundColor: "#f4f4f9",
                           borderRadius: 2,
                           "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "gray",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "redRYB.main",
-                            },
-                            "&.Mui-error fieldset": {
-                              borderColor: "red",
-                            },
+                            "& fieldset": { borderColor: "gray" },
+                            "&:hover fieldset": { borderColor: "blue" },
+                            "&.Mui-focused fieldset": { borderColor: "redRYB.main" },
+                            "&.Mui-error fieldset": { borderColor: "red" },
                           },
                         }}
                         InputProps={{
@@ -408,27 +326,23 @@ function ForgotPassword() {
                         <TextField
                         name="confirmPassword"
                         label="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         type={passwordVisible1 ? "text" : "password"}
                         placeholder="Repeat your new password"
                         InputLabelProps={{ shrink: true }}
                         fullWidth
                         variant="outlined"
+                        error={!!errorMsg}  
+                        helperText={errorMsg}
                         sx={{
                           backgroundColor: "#f4f4f9",
                           borderRadius: 2,
                           "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                              borderColor: "gray",
-                            },
-                            "&:hover fieldset": {
-                              borderColor: "blue",
-                            },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "redRYB.main",
-                            },
-                            "&.Mui-error fieldset": {
-                              borderColor: "red",
-                            },
+                            "& fieldset": { borderColor: "gray" },
+                            "&:hover fieldset": { borderColor: "blue" },
+                            "&.Mui-focused fieldset": { borderColor: "redRYB.main" },
+                            "&.Mui-error fieldset": { borderColor: "red" },
                           },
                         }}
                         InputProps={{
@@ -450,12 +364,12 @@ function ForgotPassword() {
                         />
                     </Box>   
                     )}
-
               </Box>
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
+                disabled={isLoading}
                 fullWidth
                 sx={{
                   mt: 3,
@@ -466,13 +380,11 @@ function ForgotPassword() {
                   },
                 }}
               >
-                 {activeStep === 2 ? "Change Password" : "Next"}
+                  {isLoading ? 'Enviando...' : (activeStep === 2 ? 'Change Password' : 'Next')}
               </Button>
-                
                 </form>
                 <FormDivider />
                 {/* Social login buttons */}
-    
                 <Box
                   sx={{
                     display: "flex",
@@ -501,14 +413,14 @@ function ForgotPassword() {
               }}
             >
               <Box
-                sx={{
-                  height: "100%",
-                  backgroundImage: `url(${BackgroundImage})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  position: "relative",
-                  display: { xs: "none", md: "block" }, // Oculta la imagen en pantallas pequeñas
-                }}
+               sx={{
+                height: "100%",
+                backgroundImage: `url(${BackgroundImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                position: "relative",
+                display: { xs: "none", md: "block" }, // Oculta la imagen en pantallas pequeñas
+              }}
               >
                 <Box
                   sx={{

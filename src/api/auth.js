@@ -11,6 +11,3 @@ export const verifyTokenRequest = () => instance.get(`/user/verify`);
 
 //loagout
 export const logoutRequest = () => instance.post(`/user/logout`);
-
-
-
