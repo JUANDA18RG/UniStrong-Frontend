@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import Banner from "../assets/images/Grid4.jpg";
-import { varFade } from "./animate/variants/fade";
-import { TraerEjercicios } from "../api/Ejericios";
+import Banner from "../../assets/images/Grid4.jpg";
+import { varFade } from "../../components/animate/variants/fade";
+import { TraerEjercicios } from "../../api/Ejericios";
 
 function Ejercicios() {
   const [exercises, setExercises] = useState([]);

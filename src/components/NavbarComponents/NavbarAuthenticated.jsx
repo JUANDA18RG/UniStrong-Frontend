@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, NavLink } from "react-router-dom";
 import {
   Stack,
   IconButton,
@@ -36,7 +34,7 @@ const ModalNavButton = styled(Button)(({ theme }) => ({
 const NavbarAuthenticated = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const { signout, User } = useAuth();
+  const { signout, User, typeUser } = useAuth();
   const [currentDate, setCurrentDate] = useState("");
   const { enqueueSnackbar } = useSnackbar();
 
@@ -48,15 +46,36 @@ const NavbarAuthenticated = () => {
   const CerrarSesion = async () => {
     const response = await signout();
     if (response && response.status === 200) {
-      enqueueSnackbar("Inicio de sesion exitoso", {
+      enqueueSnackbar("Cierre de sesión exitoso", {
         variant: "success",
       });
+      navigate("/Login", { replace: true });
     } else {
-      enqueueSnackbar("Error al iniciar sesion usuario", {
+      enqueueSnackbar("Error al cerrar sesión", {
         variant: "error",
       });
     }
     setIsOpen(false);
+  };
+
+  const handleRedirection = () => {
+    if (typeUser) {
+      switch (typeUser) {
+        case "cliente":
+          navigate("/cliente", { replace: true });
+          break;
+        case "coach":
+          navigate("/coach", { replace: true });
+          break;
+        case "nutriologo":
+          navigate("/nutriologo", { replace: true });
+          break;
+        default:
+          navigate("/Inicio", { replace: true });
+          break;
+      }
+      setIsOpen(false);
+    }
   };
 
   useEffect(() => {
@@ -146,9 +165,7 @@ const NavbarAuthenticated = () => {
           }}
         >
           <ModalNavButton
-            component={NavLink}
-            to="/Inicio"
-            onClick={() => setIsOpen(false)}
+            onClick={handleRedirection}
             color="cultured"
             startIcon={<HomeIcon style={{ fontSize: 35 }} />}
           >

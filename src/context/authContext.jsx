@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useContext } from "react";
+import { createContext, useEffect, useState, useContext, useMemo } from "react";
 import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 import {
@@ -80,8 +80,6 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-
-  // Efecto para manejar la redirección al inicio si isVerified es true
 
   const signup = async (user) => {
     try {

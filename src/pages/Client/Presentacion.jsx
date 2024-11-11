@@ -1,10 +1,10 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
-import { varBounce } from "./animate/variants/bounce";
-import { varFade } from "./animate/variants/fade";
-import Banner from "../assets/images/Grid1.jpg";
-import { useAuth } from "../context/authContext";
+import { varBounce } from "../../components/animate/variants/bounce";
+import { varFade } from "../../components/animate/variants/fade";
+import Banner from "../../assets/images/Grid1.jpg";
+import { useAuth } from "../../context/authContext";
 import { useState, useEffect } from "react";
 
 function WelcomePage() {
