@@ -15,8 +15,7 @@ export const logoutRequest = () => instance.post(`/user/logout`);
 
 //Desactivar cuenta 
 export const deactivateAccountRequest = (password) => {  
-  const token = Cookies.get('token');  
-  console.log('Token:', token);  
+  const token = Cookies.get('token');   
   return instance.post(    
     `/user/disable-account/${token}`,
     { password },  
