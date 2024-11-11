@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
+import SettingsIcon from "@mui/icons-material/Settings";
+
 import {
   Stack,
   IconButton,
@@ -39,10 +41,13 @@ const NavbarAuthenticated = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const goToSettings = () => {
+    setIsOpen(false);  
     navigate('/settings'); 
   };
 
   
+
+
   const CerrarSesion = async () => {
     const response = await signout();
     if (response && response.status === 200) {
@@ -183,7 +188,7 @@ const NavbarAuthenticated = () => {
           <ModalNavButton
             onClick={goToSettings}
             color="cultured"
-            startIcon={<LogoutIcon style={{ fontSize: 35 }} />}
+            startIcon={<SettingsIcon style={{ fontSize: 35 }} />}
           >
            Configuración
           </ModalNavButton>

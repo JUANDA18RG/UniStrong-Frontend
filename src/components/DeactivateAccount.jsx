@@ -34,6 +34,7 @@ const DeactivateAccount = ({ open, handleClose }) => {
     setOpenConfirmation(true);
   };
 
+ 
   const confirmDeactivation = async () => {
     try {
       const response = await deactivateAccount(password);
@@ -67,7 +68,9 @@ const DeactivateAccount = ({ open, handleClose }) => {
   return (
     <>
       <Modal open={open} onClose={handleClose} sx={{ bgcolor: "rgba(33, 33, 33, 0.7)", backdropFilter: "blur(4px)" }}>
-        <Stack spacing={3} sx={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", bgcolor: "white", padding: 4, borderRadius: 3, boxShadow: 24, maxWidth: 400, width: "100%" }}>
+        <Stack spacing={3} sx={{ position: "absolute", left: "50%",
+           top: "50%", transform: "translate(-50%, -50%)", bgcolor: "white", 
+           padding: 4, borderRadius: 3, boxShadow: 24, maxWidth: 400, width: "100%" }}>
           <IconButton sx={{ position: 'absolute', top: 8, right: 8 }} onClick={handleClose} aria-label="Cerrar">
             <CloseIcon />
           </IconButton>
@@ -142,4 +145,3 @@ const DeactivateAccount = ({ open, handleClose }) => {
   );
 };
 export default DeactivateAccount;
-
