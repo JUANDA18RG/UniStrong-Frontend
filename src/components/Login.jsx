@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -61,18 +61,24 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  if (isAuthenticated && typeUser) {
-    switch (typeUser) {
-      case "cliente":
-        return navigate("/Inicio", { replace: true });
-      case "coach":
-        return navigate("/InicioEntrenador", { replace: true });
-      case "nutriologo":
-        return navigate("/InicioNutriologo", { replace: true });
-      default:
-        return navigate("/Inicio", { replace: true });
+  useEffect(() => {
+    if (isAuthenticated && typeUser) {
+      switch (typeUser) {
+        case "cliente":
+          navigate("/cliente", { replace: true });
+          break;
+        case "coach":
+          navigate("/coach", { replace: true });
+          break;
+        case "nutriologo":
+          navigate("/nutriologo", { replace: true });
+          break;
+        default:
+          navigate("/Login", { replace: true });
+          break;
+      }
     }
-  }
+  }, [isAuthenticated, typeUser, navigate]);
 
   const onSubmit = async (data) => {
     try {

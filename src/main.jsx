@@ -9,7 +9,7 @@ import { VerificationProvider } from "./context/VerificationContext";
 import App from "./App";
 import theme from "./theme";
 import Loading from "./components/Loading";
-import { ProtectedRoute } from "./routes";
+import { ProtectedRoute } from "./protectedRoute.jsx";
 
 const Home = lazy(() => import("./pages/Home"));
 const NoMatch = lazy(() => import("./pages/NoMatch"));
@@ -47,15 +47,9 @@ root.render(
                     <Route path="/Settings" element={<Settings />} /> 
                     <Route path="*" element={<NoMatch />} />
                     <Route element={<ProtectedRoute />}>
-                      <Route path="/Inicio" element={<Client />} />
-                      <Route
-                        path="/InicioEntrenador"
-                        element={<Entrenador />}
-                      />
-                      <Route
-                        path="/InicioNutriologo"
-                        element={<Nutriologo />}
-                      />
+                      <Route path="/cliente" element={<Client />} />
+                      <Route path="/coach" element={<Entrenador />} />
+                      <Route path="/nutriologo" element={<Nutriologo />} />
                       <Route path="/user/:id" element={<User />} />
                     </Route>
                     <Route path="/validacion" element={<PageValidacion />} />
