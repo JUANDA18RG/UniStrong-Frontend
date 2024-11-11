@@ -23,6 +23,8 @@ const Nutriologo = lazy(() => import("./sections/Nutriologo"));
 const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
 const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const Settings = lazy(() => import("./components/Settings"));
+
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(

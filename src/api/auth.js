@@ -1,4 +1,5 @@
 import {instance} from './axios.js';
+import Cookies from 'js-cookie';
 
 // Registro
 export const registerRequest = (userData) => instance.post(`/user/register`, userData);
@@ -11,3 +12,18 @@ export const verifyTokenRequest = () => instance.get(`/user/verify`);
 
 //loagout
 export const logoutRequest = () => instance.post(`/user/logout`);
+
+//Desactivar cuenta 
+export const deactivateAccountRequest = (password) => {  
+  const token = Cookies.get('token');  
+  console.log('Token:', token);  
+  return instance.post(    
+    `/user/disable-account/${token}`,
+    { password },  
+  ); 
+};
+
+
+
+
+

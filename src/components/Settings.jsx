@@ -40,20 +40,17 @@ const Settings = () => {
         >
           CONFIGURACIÓN
         </Typography>
-
-        {/* Separador entre el título y el contenido */}
+             
         <Divider sx={{ width: '80%', margin: '20px 0' }} />
 
-        {/* Botón para abrir el modal de desactivar cuenta con ícono de encendido/apagado */}
         <ModalNavButton
           onClick={handleOpenDeactivateModal}
-          startIcon={<PowerIcon style={{ fontSize: 35 }} />} // Cambio de icono
+          startIcon={<PowerIcon style={{ fontSize: 35 }} />} 
         >
           Desactivar Cuenta
         </ModalNavButton>
       </Stack>
 
-      {/* Componente que maneja la desactivación */}
       <DeactivateAccount
         open={openDeactivateModal}
         handleClose={() => setOpenDeactivateModal(false)}

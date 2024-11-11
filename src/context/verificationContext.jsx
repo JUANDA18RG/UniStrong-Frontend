@@ -38,7 +38,7 @@ export const VerificationProvider = ({ children }) => {
     try {
       const response = await verifyCodeRequest(email, code);
       console.log("Código verificado correctamente:", response);
-      return response; // Retorna la respuesta para el manejo posterior
+      return response; 
     } catch (error) {
       console.error("Error al verificar el código:", error);
       throw error;

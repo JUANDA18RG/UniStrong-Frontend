@@ -6,6 +6,7 @@ import {
   LoginRequest,
   registerRequest,
   logoutRequest,
+  deactivateAccountRequest,
 } from "../api/auth.js";
 import { useNavigate } from "react-router-dom";
 import ModaSesion from "../components/Modal.jsx";
@@ -114,7 +115,29 @@ export const AuthProvider = ({ children }) => {
       }
     }
   };
-
+  
+  const deactivateAccount = async (password) => {
+    try {
+      const response = await deactivateAccountRequest(password);
+      setIsAuthenticated(false);
+      setUser(null);
+      if (!response) {
+        throw new Error('No se recibió una respuesta válida');
+      }
+      return response;   
+    } catch (error) {
+      if (error.response) {
+        console.error("Error desactivando la cuenta:", error.response.status, error.response.data);
+      } else if (error.request) {
+        console.error("No se recibió respuesta:", error.request);
+      } else {
+        console.error("Error desconocido:", error.message);
+      }
+      throw error; 
+    }
+  };
+  
+  
   return (
     <AuthContext.Provider
       value={{
@@ -126,6 +149,7 @@ export const AuthProvider = ({ children }) => {
         signout,
         isVerified,
         typeUser,
+        deactivateAccount, 
       }}
     >
       {children}

@@ -19,7 +19,6 @@ import { useVerification } from "../context/VerificationContext";
 import { Helmet } from "react-helmet-async";
 
 
-
 const metadata = { title: `ForgotPasword |  ${CONFIG.appName}` };
 
 function ForgotPassword() {
@@ -133,8 +132,9 @@ function ForgotPassword() {
       </Helmet>
         <Grid
           container
-          sx={{ overflow: "hidden" }}
-          maxHeight={{ xs: "calc(100vh - 70px)", sm: "calc(100vh - 80px)" }}
+          sx={{ overflow: "hidden"}}
+          maxHeight={{ xs: "calc(100vh)", sm: "calc(100vh)" }}
+          
         >
           {/* Left side: Background image with optional overlay */}
           <Grid
@@ -216,7 +216,8 @@ function ForgotPassword() {
     
                 {/* Form */}
                 <form onSubmit={handleSubmit}>
-                <Box display="flex" flexDirection="column" gap={3}>
+                <Box display="flex" flexDirection="column" gap={3}         
+              >
                 {activeStep === 0 && (
                 <TextField
                   name="email"
