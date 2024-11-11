@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useContext } from "react";
+import { createContext, useEffect, useState, useContext, useMemo } from "react";
 import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 import {
@@ -80,8 +80,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Efecto para manejar la redirección al inicio si isVerified es true
-
   const signup = async (user) => {
     try {
       const response = await registerRequest(user);
@@ -115,19 +113,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const contextValue = useMemo(
+    () => ({
+      User,
+      isAuthenticated,
+      loading,
+      signin,
+      signup,
+      signout,
+      isVerified,
+      typeUser,
+    }),
+    [User, isAuthenticated, loading, isVerified, typeUser]
+  );
+
   return (
-    <AuthContext.Provider
-      value={{
-        User,
-        isAuthenticated,
-        loading,
-        signin,
-        signup,
-        signout,
-        isVerified,
-        typeUser,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
       {showModal && <ModaSesion open={showModal} />}
     </AuthContext.Provider>

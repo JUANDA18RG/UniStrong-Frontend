@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Calendar from "@fullcalendar/react";
 import listPlugin from "@fullcalendar/list";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -16,20 +16,45 @@ import {
   DialogActions,
   TextField,
   IconButton,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Add, Close } from "@mui/icons-material";
-import Logo from "../assets/images/Logo1.png";
+import Logo from "../../assets/images/Logo1.png";
 import { motion } from "framer-motion";
-import { varRotate } from "./animate/variants/rotate";
+import { varRotate } from "../../components/animate/variants/rotate";
 
-const Horario = () => {
+const HorarioAsignacion = () => {
   const theme = useTheme();
   const calendarRef = useRef(null);
   const [events, setEvents] = useState([]);
   const [openForm, setOpenForm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
+  const [selectedUser, setSelectedUser] = useState("");
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    // Simulación de carga de usuarios
+    const fetchUsers = async () => {
+      // Aquí se haría la llamada al endpoint para obtener los usuarios
+      // const response = await fetch('/api/users');
+      // const data = await response.json();
+      // setUsers(data);
+
+      // Simulación de datos de usuarios
+      const simulatedUsers = [
+        { id: 1, name: "Usuario 1" },
+        { id: 2, name: "Usuario 2" },
+      ];
+      setUsers(simulatedUsers);
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleDateSelect = (selectInfo) => {
     setNewEvent({
@@ -52,8 +77,9 @@ const Horario = () => {
 
   const handleEventAdd = () => {
     const calendarApi = calendarRef.current.getApi();
-    calendarApi.addEvent(newEvent);
-    setEvents([...events, newEvent]);
+    const eventWithUser = { ...newEvent, userId: selectedUser };
+    calendarApi.addEvent(eventWithUser);
+    setEvents([...events, eventWithUser]);
     setOpenForm(false);
   };
 
@@ -69,6 +95,14 @@ const Horario = () => {
     setEvents(events.filter((event) => event.id !== selectedEvent.id));
     setOpenForm(false);
   };
+
+  const handleUserChange = (event) => {
+    setSelectedUser(event.target.value);
+  };
+
+  const filteredEvents = events.filter(
+    (event) => event.userId === selectedUser
+  );
 
   return (
     <>
@@ -133,6 +167,21 @@ const Horario = () => {
           >
             Calendario de Eventos
           </Typography>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="user-select-label">Seleccionar Usuario</InputLabel>
+            <Select
+              labelId="user-select-label"
+              value={selectedUser}
+              onChange={handleUserChange}
+              label="Seleccionar Usuario"
+            >
+              {users.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button
             variant="contained"
             startIcon={<Add />}
@@ -167,7 +216,7 @@ const Horario = () => {
             initialView="dayGridMonth"
             selectable
             editable
-            events={events}
+            events={filteredEvents}
             select={handleDateSelect}
             eventClick={handleEventClick}
             headerToolbar={{
@@ -287,4 +336,4 @@ const Horario = () => {
   );
 };
 
-export default Horario;
+export default HorarioAsignacion;
