@@ -11,67 +11,68 @@ import {
   Typography,
   Grid,
   CircularProgress,
+  Alert,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { useSnackbar } from "notistack";
 import { motion } from "framer-motion";
+import { useForm, Controller } from "react-hook-form";
 import Logo from "../../assets/images/Logo1.png";
 import Banner from "../../assets/images/Grid8.jpg";
+import { RutinasCreate } from "../../api/Ejericios";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "../../context/authContext"; // Importar el contexto de autenticación
+
+const schema = z.object({
+  name: z.string().nonempty("El nombre es requerido"),
+  description: z.string().nonempty("La descripción es requerida"),
+  category: z.string().nonempty("La categoría es requerida"),
+  musclesWorked: z
+    .array(z.string())
+    .nonempty("El músculo trabajado es requerido"),
+});
+
+const defaultValues = {
+  name: "",
+  description: "",
+  category: "",
+  musclesWorked: [],
+};
 
 const CrearRutina = () => {
-  const [newRoutine, setNewRoutine] = useState({
-    title: "",
-    description: "",
-    userId: "",
-    bodyPart: "",
-    duration: "",
-    difficulty: "",
-    sets: "",
-    reps: "",
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues,
   });
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState({});
+  const { enqueueSnackbar } = useSnackbar();
+  const { User } = useAuth();
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      // Simulación de carga de usuarios
-      const simulatedUsers = [
-        { id: 1, name: "Usuario 1" },
-        { id: 2, name: "Usuario 2" },
-      ];
-      setUsers(simulatedUsers);
-      setLoading(false);
-    };
+  const onSubmit = async (data) => {
+    try {
+      if (data.musclesWorked.length === 0) {
+        throw new Error("Debes seleccionar al menos un músculo trabajado");
+      }
+      const routineData = { ...data, coachId: User.id };
+      const response = await RutinasCreate(routineData);
 
-    fetchUsers();
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewRoutine({ ...newRoutine, [name]: value });
-  };
-
-  const validateForm = () => {
-    let tempErrors = {};
-    if (!newRoutine.title) tempErrors.title = "El título es requerido";
-    if (!newRoutine.description)
-      tempErrors.description = "La descripción es requerida";
-    if (!newRoutine.userId) tempErrors.userId = "El usuario es requerido";
-    if (!newRoutine.bodyPart)
-      tempErrors.bodyPart = "La parte del cuerpo es requerida";
-    if (!newRoutine.duration) tempErrors.duration = "La duración es requerida";
-    if (!newRoutine.difficulty)
-      tempErrors.difficulty = "La dificultad es requerida";
-    if (!newRoutine.sets) tempErrors.sets = "El número de series es requerido";
-    if (!newRoutine.reps)
-      tempErrors.reps = "El número de repeticiones es requerido";
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
-
-  const handleSubmit = () => {
-    if (validateForm()) {
-      console.log("Rutina creada:", newRoutine);
+      if (response.status === 201) {
+        enqueueSnackbar("Rutina creada exitosamente", {
+          variant: "success",
+        });
+        reset();
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || // Mensaje personalizado del servidor
+        (typeof error === "string" ? error : error.message);
+      setError(errorMessage);
+      console.error("Error al crear la rutina", errorMessage);
     }
   };
 
@@ -135,23 +136,36 @@ const CrearRutina = () => {
           }}
         >
           <Box sx={{ textAlign: "center", mb: 3 }}>
-            <img
-              src={Logo}
-              alt="Logo"
-              style={{
-                padding: "10px",
-                border: "5px solid #ff0000",
-                borderRadius: "50%",
-                width: "120px",
-                height: "120px",
-                boxShadow: "0 10px 20px rgba(0,0,0,0.2)",
-                transition: "transform 0.3s",
+            <motion.div
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={{
+                initial: { opacity: 0, rotate: -10 },
+                animate: { opacity: 1, rotate: 0 },
+                exit: { opacity: 0, rotate: 10 },
               }}
-              onMouseOver={(e) =>
-                (e.currentTarget.style.transform = "scale(1.1)")
-              }
-              onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            />
+            >
+              <img
+                src={Logo}
+                alt="Logo"
+                style={{
+                  padding: "10px",
+                  border: "5px solid #ff0000",
+                  borderRadius: "50%",
+                  width: "120px",
+                  height: "120px",
+                  boxShadow: "0 10px 20px rgba(0,0,0,0.2)",
+                  transition: "transform 0.3s",
+                }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.1)")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              />
+            </motion.div>
             <Typography
               variant="h4"
               sx={{ fontWeight: "bold", color: "redRYB.main" }}
@@ -162,179 +176,202 @@ const CrearRutina = () => {
               Asigna una nueva rutina de ejercicios a un usuario específico
             </Typography>
           </Box>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Título"
-                type="text"
-                fullWidth
-                name="title"
-                value={newRoutine.title}
-                onChange={handleInputChange}
-                variant="outlined"
-                error={!!errors.title}
-                helperText={errors.title}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Descripción"
-                type="text"
-                fullWidth
-                name="description"
-                value={newRoutine.description}
-                onChange={handleInputChange}
-                variant="outlined"
-                error={!!errors.description}
-                helperText={errors.description}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl
-                fullWidth
-                margin="dense"
-                variant="outlined"
-                error={!!errors.userId}
-              >
-                <InputLabel id="user-select-label">
-                  Seleccionar Usuario
-                </InputLabel>
-                <Select
-                  labelId="user-select-label"
-                  name="userId"
-                  value={newRoutine.userId}
-                  onChange={handleInputChange}
-                  label="Seleccionar Usuario"
-                >
-                  {loading ? (
-                    <MenuItem value="">
-                      <CircularProgress size={24} />
-                    </MenuItem>
-                  ) : (
-                    users.map((user) => (
-                      <MenuItem key={user.id} value={user.id}>
-                        {user.name}
-                      </MenuItem>
-                    ))
+          {!!error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      margin="dense"
+                      label="Nombre"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      error={!!errors.name}
+                      helperText={errors.name?.message}
+                      sx={{
+                        backgroundColor: "#f4f4f9",
+                        borderRadius: 2,
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "gray",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "blue",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "redRYB.main",
+                          },
+                          "&.Mui-error fieldset": {
+                            borderColor: "red",
+                          },
+                        },
+                      }}
+                    />
                   )}
-                </Select>
-                {errors.userId && (
-                  <Typography color="error">{errors.userId}</Typography>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl
-                fullWidth
-                margin="dense"
-                variant="outlined"
-                error={!!errors.bodyPart}
-              >
-                <InputLabel id="body-part-select-label">
-                  Parte del Cuerpo
-                </InputLabel>
-                <Select
-                  labelId="body-part-select-label"
-                  name="bodyPart"
-                  value={newRoutine.bodyPart}
-                  onChange={handleInputChange}
-                  label="Parte del Cuerpo"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      margin="dense"
+                      label="Descripción"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      multiline
+                      rows={4}
+                      maxRows={4}
+                      error={!!errors.description}
+                      helperText={errors.description?.message}
+                      sx={{
+                        backgroundColor: "#f4f4f9",
+                        borderRadius: 2,
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "gray",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "blue",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "redRYB.main",
+                          },
+                          "&.Mui-error fieldset": {
+                            borderColor: "red",
+                          },
+                        },
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl
+                  fullWidth
+                  margin="dense"
+                  variant="outlined"
+                  error={!!errors.category}
                 >
-                  <MenuItem value="Piernas">Piernas</MenuItem>
-                  <MenuItem value="Brazos">Brazos</MenuItem>
-                  <MenuItem value="Espalda">Espalda</MenuItem>
-                  <MenuItem value="Pecho">Pecho</MenuItem>
-                  <MenuItem value="Abdomen">Abdomen</MenuItem>
-                </Select>
-                {errors.bodyPart && (
-                  <Typography color="error">{errors.bodyPart}</Typography>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Duración (minutos)"
-                type="number"
-                fullWidth
-                name="duration"
-                value={newRoutine.duration}
-                onChange={handleInputChange}
-                variant="outlined"
-                error={!!errors.duration}
-                helperText={errors.duration}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl
-                fullWidth
-                margin="dense"
-                variant="outlined"
-                error={!!errors.difficulty}
-              >
-                <InputLabel id="difficulty-select-label">Dificultad</InputLabel>
-                <Select
-                  labelId="difficulty-select-label"
-                  name="difficulty"
-                  value={newRoutine.difficulty}
-                  onChange={handleInputChange}
-                  label="Dificultad"
+                  <InputLabel id="category-select-label">Categoría</InputLabel>
+                  <Controller
+                    name="category"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        labelId="category-select-label"
+                        label="Categoría"
+                        sx={{
+                          backgroundColor: "#f4f4f9",
+                          borderRadius: 2,
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: "gray",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "blue",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "redRYB.main",
+                            },
+                            "&.Mui-error fieldset": {
+                              borderColor: "red",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="Facil">Facil</MenuItem>
+                        <MenuItem value="Medio">Medio</MenuItem>
+                        <MenuItem value="Avanzado">Avanzado</MenuItem>
+                      </Select>
+                    )}
+                  />
+                  {errors.category && (
+                    <Typography color="error">
+                      {errors.category.message}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl
+                  fullWidth
+                  margin="dense"
+                  variant="outlined"
+                  error={!!errors.musclesWorked}
                 >
-                  <MenuItem value="Principiante">Principiante</MenuItem>
-                  <MenuItem value="Intermedio">Intermedio</MenuItem>
-                  <MenuItem value="Avanzado">Avanzado</MenuItem>
-                </Select>
-                {errors.difficulty && (
-                  <Typography color="error">{errors.difficulty}</Typography>
-                )}
-              </FormControl>
+                  <InputLabel id="musclesWorked-select-label">
+                    Músculos Trabajados
+                  </InputLabel>
+                  <Controller
+                    name="musclesWorked"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        labelId="musclesWorked-select-label"
+                        label="Músculos Trabajados"
+                        multiple
+                        sx={{
+                          backgroundColor: "#f4f4f9",
+                          borderRadius: 2,
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: "gray",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "blue",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "redRYB.main",
+                            },
+                            "&.Mui-error fieldset": {
+                              borderColor: "red",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="Pecho">Pecho</MenuItem>
+                        <MenuItem value="Espalda">Espalda</MenuItem>
+                        <MenuItem value="Piernas">Piernas</MenuItem>
+                        <MenuItem value="Brazos">Brazos</MenuItem>
+                        <MenuItem value="Hombros">Hombros</MenuItem>
+                      </Select>
+                    )}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  disabled={isSubmitting}
+                  sx={{
+                    backgroundColor: "redRYB.main",
+                    "&:hover": {
+                      backgroundColor: "#b71c1c",
+                    },
+                  }}
+                >
+                  {isSubmitting ? "Creando..." : "Crear Rutina"}
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Número de Series"
-                type="number"
-                fullWidth
-                name="sets"
-                value={newRoutine.sets}
-                onChange={handleInputChange}
-                variant="outlined"
-                error={!!errors.sets}
-                helperText={errors.sets}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Número de Repeticiones"
-                type="number"
-                fullWidth
-                name="reps"
-                value={newRoutine.reps}
-                onChange={handleInputChange}
-                variant="outlined"
-                error={!!errors.reps}
-                helperText={errors.reps}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: "redRYB.main",
-                  "&:hover": {
-                    backgroundColor: "#b71c1c",
-                  },
-                }}
-              >
-                Crear Rutina
-              </Button>
-            </Grid>
-          </Grid>
+          </form>
         </Card>
       </Box>
     </Box>
