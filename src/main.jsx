@@ -5,7 +5,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { HelmetProvider } from "react-helmet-async";
 import { SnackbarProvider } from "notistack";
 import { AuthProvider } from "./context/authContext";
-import { VerificationProvider } from "./context/VerificationContext";
+import { VerificationProvider } from "../src/context/verificationContext.jsx";
 import App from "./App";
 import theme from "./theme";
 import Loading from "./components/Loading";
@@ -24,7 +24,6 @@ const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
 const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const Settings = lazy(() => import("./components/Settings"));
 
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -36,25 +35,28 @@ root.render(
             <CssBaseline />
             <SnackbarProvider>
               <Suspense fallback={<Loading />}>
-              <VerificationProvider>
-                <Routes>
-                  <Route path="/" element={<App />}>
-                    <Route index element={<Home />} />
-                    <Route path="/Login" element={<Login />} />
-                    <Route path="/Register" element={<Register />} />
-                    <Route path="/About" element={<About />} />
-                    <Route path="/ForgotPassword" element={<ForgotPassword />} />
-                    <Route path="/Settings" element={<Settings />} /> 
-                    <Route path="*" element={<NoMatch />} />
-                    <Route element={<ProtectedRoute />}>
-                      <Route path="/cliente" element={<Client />} />
-                      <Route path="/coach" element={<Entrenador />} />
-                      <Route path="/nutriologo" element={<Nutriologo />} />
-                      <Route path="/user/:id" element={<User />} />
+                <VerificationProvider>
+                  <Routes>
+                    <Route path="/" element={<App />}>
+                      <Route index element={<Home />} />
+                      <Route path="/Login" element={<Login />} />
+                      <Route path="/Register" element={<Register />} />
+                      <Route path="/About" element={<About />} />
+                      <Route
+                        path="/ForgotPassword"
+                        element={<ForgotPassword />}
+                      />
+                      <Route path="/Settings" element={<Settings />} />
+                      <Route path="*" element={<NoMatch />} />
+                      <Route element={<ProtectedRoute />}>
+                        <Route path="/cliente" element={<Client />} />
+                        <Route path="/coach" element={<Entrenador />} />
+                        <Route path="/nutriologo" element={<Nutriologo />} />
+                        <Route path="/user/:id" element={<User />} />
+                      </Route>
+                      <Route path="/validacion" element={<PageValidacion />} />
                     </Route>
-                    <Route path="/validacion" element={<PageValidacion />} />
-                  </Route>
-                </Routes>
+                  </Routes>
                 </VerificationProvider>
               </Suspense>
             </SnackbarProvider>
