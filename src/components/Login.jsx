@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -329,15 +329,15 @@ function Login() {
                   />
                 </Box>
 
-                <Box
-                  component={Link}
-                  to="/Register"
-                  variant="body2"
-                  color="inherit"
-                  sx={{ display: "block", textAlign: "right", mt: 1 }}
-                >
-                  Forgot password?
-                </Box>
+              <Box
+                component={Link}
+                to="/ForgotPassword"
+                variant="body2"
+                color="inherit"
+                sx={{ display: "block", textAlign: "right", mt: 1 }}
+              >
+                Forgot password?
+              </Box>
 
                 <Button
                   type="submit"

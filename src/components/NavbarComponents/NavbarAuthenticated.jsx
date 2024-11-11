@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+
 import {
   Stack,
   IconButton,
@@ -20,6 +22,7 @@ import { useSnackbar } from "notistack";
 
 import HomeIcon from "@mui/icons-material/Home";
 
+
 const ModalNavButton = styled(Button)(({ theme }) => ({
   borderBottom: "3px solid transparent",
   fontSize: 28,
@@ -31,11 +34,17 @@ const ModalNavButton = styled(Button)(({ theme }) => ({
 }));
 
 const NavbarAuthenticated = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { signout, User } = useAuth();
   const [currentDate, setCurrentDate] = useState("");
   const { enqueueSnackbar } = useSnackbar();
 
+  const goToSettings = () => {
+    navigate('/settings'); 
+  };
+
+  
   const CerrarSesion = async () => {
     const response = await signout();
     if (response && response.status === 200) {
@@ -155,12 +164,21 @@ const NavbarAuthenticated = () => {
             Perfil
           </ModalNavButton>
           <ModalNavButton
+            onClick={goToSettings}
+            color="cultured"
+            startIcon={<LogoutIcon style={{ fontSize: 35 }} />}
+          >
+           Configuración
+          </ModalNavButton>
+
+          <ModalNavButton
             onClick={CerrarSesion}
             color="cultured"
             startIcon={<LogoutIcon style={{ fontSize: 35 }} />}
           >
             Cerrar Sesión
           </ModalNavButton>
+          
         </Stack>
       </Modal>
     </>

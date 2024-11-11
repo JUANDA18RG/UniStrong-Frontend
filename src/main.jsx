@@ -5,6 +5,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { HelmetProvider } from "react-helmet-async";
 import { SnackbarProvider } from "notistack";
 import { AuthProvider } from "./context/authContext";
+import { VerificationProvider } from "./context/VerificationContext";
 import App from "./App";
 import theme from "./theme";
 import Loading from "./components/Loading";
@@ -20,6 +21,10 @@ const User = lazy(() => import("./sections/User"));
 const Entrenador = lazy(() => import("./sections/Entrenador"));
 const Nutriologo = lazy(() => import("./sections/Nutriologo"));
 const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
+const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
+const Settings = lazy(() => import("./components/Settings"));
+
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -31,12 +36,15 @@ root.render(
             <CssBaseline />
             <SnackbarProvider>
               <Suspense fallback={<Loading />}>
+              <VerificationProvider>
                 <Routes>
                   <Route path="/" element={<App />}>
                     <Route index element={<Home />} />
                     <Route path="/Login" element={<Login />} />
                     <Route path="/Register" element={<Register />} />
                     <Route path="/About" element={<About />} />
+                    <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                    <Route path="/Settings" element={<Settings />} /> 
                     <Route path="*" element={<NoMatch />} />
                     <Route element={<ProtectedRoute />}>
                       <Route path="/Inicio" element={<Client />} />
@@ -53,6 +61,7 @@ root.render(
                     <Route path="/validacion" element={<PageValidacion />} />
                   </Route>
                 </Routes>
+                </VerificationProvider>
               </Suspense>
             </SnackbarProvider>
           </ThemeProvider>
