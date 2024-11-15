@@ -23,6 +23,8 @@ const Nutriologo = lazy(() => import("./sections/Nutriologo"));
 const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
 const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const Settings = lazy(() => import("./components/Settings"));
+const Mensualidad = lazy(() => import("./pages/Mensualidad"));
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -39,6 +41,7 @@ root.render(
                   <Routes>
                     <Route path="/" element={<App />}>
                       <Route index element={<Home />} />
+                      <Route path="/Mensualidad" element={<Mensualidad />} />
                       <Route path="/Login" element={<Login />} />
                       <Route path="/Register" element={<Register />} />
                       <Route path="/About" element={<About />} />
