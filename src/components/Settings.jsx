@@ -35,7 +35,7 @@ const Settings = () => {
           padding: 5,
           minHeight: '100vh',
           alignItems: 'flex-start', 
-          backgroundColor: '#003366',
+          backgroundColor:  "common.black",
           paddingTop: '100px',
         }}
       >  
@@ -62,8 +62,8 @@ const Settings = () => {
             onClick={handleOpenDeactivateModal}
             startIcon={<PowerIcon sx={{ fontSize: 20 }} />}
             sx={{
-              width: '400px',  // Ajusta el ancho
-              textOverflow: 'ellipsis', // Añade puntos suspensivos si el texto es largo
+              width: '400px',  
+              textOverflow: 'ellipsis',
               padding: '10px 20px',
             }}
           >

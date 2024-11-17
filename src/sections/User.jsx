@@ -15,6 +15,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Chart from "react-apexcharts";
 import { useAuth } from "../context/authContext";
+import { useNavigate } from "react-router-dom"; 
+
 
 const UserInfo = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -72,6 +74,7 @@ const chartSeries = [75];
 
 function User() {
   const { User } = useAuth();
+  const navigate = useNavigate();
   return (
     <Box sx={{ padding: 4, backgroundColor: "common.black" }}>
       <Box sx={{ justifyContent: "center", mt: 8 }}>
@@ -140,6 +143,7 @@ function User() {
             variant="contained"
             color="redRYB"
             startIcon={<FitnessCenterIcon />}
+            onClick={() => navigate('/routines')} 
           >
             Mis Entrenamientos
           </Button>

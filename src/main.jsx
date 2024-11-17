@@ -23,6 +23,7 @@ const Nutriologo = lazy(() => import("./sections/Nutriologo"));
 const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
 const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const Settings = lazy(() => import("./components/Settings"));
+const Routines  =lazy(()=> import ("./components/Routines"));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -47,6 +48,7 @@ root.render(
                         element={<ForgotPassword />}
                       />
                       <Route path="/Settings" element={<Settings />} />
+                      <Route path="/Routines" element={<Routines />}/>
                       <Route path="*" element={<NoMatch />} />
                       <Route element={<ProtectedRoute />}>
                         <Route path="/cliente" element={<Client />} />
