@@ -15,7 +15,7 @@ import IconButton from "@mui/material/IconButton";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { useSnackbar } from "notistack";
 import { CONFIG } from "../config-global";
-import { useVerification } from "../context/VerificationContext";
+import { useVerification } from "../context/verificationContext";
 import { Helmet } from "react-helmet-async";
 
 
