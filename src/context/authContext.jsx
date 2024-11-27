@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [isVerified, setIsVerified] = useState(null);
   const [typeUser, setTypeUser] = useState(null);
+  const [isFirstLogin, setisFirstLogin] = useState(false);
 
   const navigate = useNavigate();
 
@@ -49,6 +50,7 @@ export const AuthProvider = ({ children }) => {
           setUser(res.data.user);
           setIsAuthenticated(true);
           setIsVerified(res.data.user.state);
+          setisFirstLogin(res.data.infoClientRegistered);
         }
         setLoading(false);
       } catch (error) {
@@ -71,6 +73,8 @@ export const AuthProvider = ({ children }) => {
       console.log("Estado de validación:", response.data.user.state);
       setTypeUser(response.data.user.userType);
       console.log("tipo de usuario", response.data.user.userType);
+      setisFirstLogin(response.data.infoClientRegistered);
+      console.log("Es la primera vez que se loguea:", response.data.infoClientRegistered);
       return response;
     } catch (error) {
       console.error(
@@ -147,6 +151,7 @@ export const AuthProvider = ({ children }) => {
         signout,
         isVerified,
         typeUser,
+        isFirstLogin,
         deactivateAccount, 
       }}
     >
