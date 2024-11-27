@@ -5,7 +5,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { HelmetProvider } from "react-helmet-async";
 import { SnackbarProvider } from "notistack";
 import { AuthProvider } from "./context/authContext";
-import { VerificationProvider } from "./context/verificationContext.jsx";
+import { VerificationProvider } from "./context/verificationContext";
 import App from "./App";
 import theme from "./theme";
 import Loading from "./components/Loading";
