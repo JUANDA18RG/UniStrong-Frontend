@@ -55,7 +55,7 @@ function Login() {
     defaultValues,
   });
 
-  const { signin, isAuthenticated, typeUser } = useAuth();
+  const { signin, isAuthenticated, typeUser,isFirstLogin } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState("");
@@ -63,22 +63,27 @@ function Login() {
 
   useEffect(() => {
     if (isAuthenticated && typeUser) {
-      switch (typeUser) {
-        case "cliente":
-          navigate("/cliente", { replace: true });
-          break;
-        case "coach":
-          navigate("/coach", { replace: true });
-          break;
-        case "nutriologo":
-          navigate("/nutriologo", { replace: true });
-          break;
-        default:
-          navigate("/Login", { replace: true });
-          break;
+      if (!isFirstLogin && typeUser === "cliente") {
+        navigate("/CompleteForm", { replace: true });
+      } else {
+        switch (typeUser) {
+          case "cliente":
+            navigate("/cliente", { replace: true });
+            break;
+          case "coach":
+            navigate("/coach", { replace: true });
+            break;
+          case "nutriologo":
+            navigate("/nutriologo", { replace: true });
+            break;
+          default:
+            navigate("/Login", { replace: true });
+            break;
+        }
       }
     }
-  }, [isAuthenticated, typeUser, navigate]);
+  }, [isAuthenticated, typeUser, isFirstLogin, navigate]);
+  
 
   const onSubmit = async (data) => {
     try {

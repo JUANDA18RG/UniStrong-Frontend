@@ -47,7 +47,6 @@ const NavbarAuthenticated = () => {
 
   
 
-
   const CerrarSesion = async () => {
     const response = await signout();
     if (response && response.status === 200) {

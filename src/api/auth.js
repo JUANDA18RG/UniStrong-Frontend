@@ -22,6 +22,39 @@ export const deactivateAccountRequest = (password) => {
   ); 
 };
 
+//Completar formulario, primera vez que se loguea
+export const completarFormRequest = (formdata) => {  
+  const token = Cookies.get('token');
+  return instance.post(    
+    `/client/register`, 
+    formdata,{
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+   }
+  ); 
+};
+
+//Elegir membresia
+export const membresiaRequest = (idMembership) => {
+  const token = Cookies.get('token');
+  console.log (token);
+  return instance.put(
+    `/client/update_membership`,
+    { idMembership },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+
+
+
+
+
 
 
 
