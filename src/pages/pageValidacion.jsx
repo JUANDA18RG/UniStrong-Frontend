@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, Stack, Button, Typography } from "@mui/material";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
-import axios from "axios"; // Importar axios para hacer la solicit HTTP
+import axios from "axios"; // Importar axios para hacer la solicitud HTTP
 
 const PageValidacion = () => {
   const { User } = useAuth(); // Obtener el usuario logueado
