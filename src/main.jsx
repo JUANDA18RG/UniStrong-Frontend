@@ -5,7 +5,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { HelmetProvider } from "react-helmet-async";
 import { SnackbarProvider } from "notistack";
 import { AuthProvider } from "./context/authContext";
-import { VerificationProvider } from "../src/context/verificationContext.jsx";
+import { VerificationProvider } from "./context/verificationContext";
 import App from "./App";
 import theme from "./theme";
 import Loading from "./components/Loading";
@@ -24,6 +24,9 @@ const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
 const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const Settings = lazy(() => import("./components/Settings"));
 const Mensualidad = lazy(() => import("./pages/Mensualidad"));
+const CompleteForm  =lazy(()=> import ("./components/CompleteForm"));    
+const Membership  =lazy(()=> import ("./components/Membership"));    
+const Routines  =lazy(()=> import ("./components/Routines"));
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -50,6 +53,10 @@ root.render(
                         element={<ForgotPassword />}
                       />
                       <Route path="/Settings" element={<Settings />} />
+                      <Route path="/Routines" element={<Routines />}/>
+                      <Route path="/CompleteForm" element={<CompleteForm />}/>
+                      <Route path="/Membership" element={<Membership />}/>
+                      
                       <Route path="*" element={<NoMatch />} />
                       <Route element={<ProtectedRoute />}>
                         <Route path="/cliente" element={<Client />} />
