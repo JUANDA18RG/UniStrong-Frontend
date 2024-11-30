@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useContext, useMemo } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 import {
@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
   const [isVerified, setIsVerified] = useState(null);
   const [typeUser, setTypeUser] = useState(null);
   const [isFirstLogin, setisFirstLogin] = useState(false);
+  const [additionalData, setAdittionalData] = useState(null);
 
   const navigate = useNavigate();
 
@@ -51,6 +52,10 @@ export const AuthProvider = ({ children }) => {
           setIsAuthenticated(true);
           setIsVerified(res.data.user.state);
           setisFirstLogin(res.data.infoClientRegistered);
+          const storedAdditionalData = localStorage.getItem("additionalData");
+          if (storedAdditionalData) {
+            setAdittionalData(JSON.parse(storedAdditionalData));
+          }
         }
         setLoading(false);
       } catch (error) {
@@ -68,13 +73,22 @@ export const AuthProvider = ({ children }) => {
       const response = await LoginRequest(user);
       setUser(response.data.user);
       console.log("Response from LoginRequest:", response.data.user);
+      setAdittionalData(response.data.user.additionalData);
+      localStorage.setItem(
+        "additionalData",
+        JSON.stringify(response.data.user.additionalData)
+      );
+      console.log("informacioAdicional", response.data.user.additionalData);
       setIsAuthenticated(true);
       setIsVerified(response.data.user.state);
       console.log("Estado de validación:", response.data.user.state);
       setTypeUser(response.data.user.userType);
       console.log("tipo de usuario", response.data.user.userType);
       setisFirstLogin(response.data.infoClientRegistered);
-      console.log("Es la primera vez que se loguea:", response.data.infoClientRegistered);
+      console.log(
+        "Es la primera vez que se loguea:",
+        response.data.infoClientRegistered
+      );
       return response;
     } catch (error) {
       console.error(
@@ -103,6 +117,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await logoutRequest();
       Cookies.remove("token");
+      localStorage.removeItem("additionalData");
       setUser(null);
       setIsAuthenticated(false);
       return res;
@@ -117,29 +132,32 @@ export const AuthProvider = ({ children }) => {
       }
     }
   };
-  
+
   const deactivateAccount = async (password) => {
     try {
       const response = await deactivateAccountRequest(password);
       setIsAuthenticated(false);
       setUser(null);
       if (!response) {
-        throw new Error('No se recibió una respuesta válida');
+        throw new Error("No se recibió una respuesta válida");
       }
-      return response;   
+      return response;
     } catch (error) {
       if (error.response) {
-        console.error("Error desactivando la cuenta:", error.response.status, error.response.data);
+        console.error(
+          "Error desactivando la cuenta:",
+          error.response.status,
+          error.response.data
+        );
       } else if (error.request) {
         console.error("No se recibió respuesta:", error.request);
       } else {
         console.error("Error desconocido:", error.message);
       }
-      throw error; 
+      throw error;
     }
   };
-  
-  
+
   return (
     <AuthContext.Provider
       value={{
@@ -152,7 +170,8 @@ export const AuthProvider = ({ children }) => {
         isVerified,
         typeUser,
         isFirstLogin,
-        deactivateAccount, 
+        deactivateAccount,
+        additionalData,
       }}
     >
       {children}
