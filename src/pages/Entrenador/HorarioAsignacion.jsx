@@ -26,6 +26,11 @@ import { Add, Close } from "@mui/icons-material";
 import Logo from "../../assets/images/Logo1.png";
 import { motion } from "framer-motion";
 import { varRotate } from "../../components/animate/variants/rotate";
+import SelectUser from "../../components/Select/SelelectUser";
+import SelectRutina from "../../components/Select/SelectRutina";
+import { AsignarRutina } from "../../api/Ejericios";
+import { useAuth } from "../../context/authContext";
+import { useSnackbar } from "notistack";
 
 const HorarioAsignacion = () => {
   const theme = useTheme();
@@ -33,34 +38,23 @@ const HorarioAsignacion = () => {
   const [events, setEvents] = useState([]);
   const [openForm, setOpenForm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
-  const [selectedUser, setSelectedUser] = useState("");
-  const [users, setUsers] = useState([]);
+  const { additionalData } = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
+  const [newEvent, setNewEvent] = useState({
+    start: "",
+    recurrenceDay: "",
+    userId: "",
+    rutinaId: "",
+  });
 
-  useEffect(() => {
-    // Simulación de carga de usuarios
-    const fetchUsers = async () => {
-      // Aquí se haría la llamada al endpoint para obtener los usuarios
-      // const response = await fetch('/api/users');
-      // const data = await response.json();
-      // setUsers(data);
-
-      // Simulación de datos de usuarios
-      const simulatedUsers = [
-        { id: 1, name: "Usuario 1" },
-        { id: 2, name: "Usuario 2" },
-      ];
-      setUsers(simulatedUsers);
-    };
-
-    fetchUsers();
-  }, []);
+  console.log(additionalData);
 
   const handleDateSelect = (selectInfo) => {
     setNewEvent({
-      title: "",
       start: selectInfo.startStr,
-      end: selectInfo.endStr,
+      recurrenceDay: "",
+      userId: additionalData.id,
+      rutinaId: "",
     });
     setOpenForm(true);
   };
@@ -68,26 +62,63 @@ const HorarioAsignacion = () => {
   const handleEventClick = (clickInfo) => {
     setSelectedEvent(clickInfo.event);
     setNewEvent({
-      title: clickInfo.event.title,
       start: clickInfo.event.startStr,
-      end: clickInfo.event.endStr,
+      recurrenceDay: clickInfo.event.extendedProps.recurrenceDay,
+      userId: clickInfo.event.extendedProps.userId,
+      rutinaId: clickInfo.event.extendedProps.rutinaId,
     });
     setOpenForm(true);
   };
 
-  const handleEventAdd = () => {
+  const handleEventAdd = async () => {
     const calendarApi = calendarRef.current.getApi();
-    const eventWithUser = { ...newEvent, userId: selectedUser };
-    calendarApi.addEvent(eventWithUser);
-    setEvents([...events, eventWithUser]);
+    calendarApi.addEvent(newEvent);
+    setEvents([...events, newEvent]);
     setOpenForm(false);
+
+    // Enviar la información del evento al backend
+    try {
+      console.log("Evento a agregar:", newEvent);
+      const dataPerson = {
+        scheduledDate: newEvent.start,
+        email: newEvent.userId,
+        routineId: newEvent.rutinaId,
+        recurrenceDay: newEvent.recurrenceDay,
+      };
+      console.log("Data a enviar:", dataPerson);
+      const response = await AsignarRutina(dataPerson);
+      if (response.status !== 200) {
+        throw new Error("Error al agregar el evento");
+      }
+      enqueueSnackbar("Evento agregado correctamente", { variant: "success" });
+      console.log("Evento agregado:", response.data);
+    } catch (error) {
+      console.error("Error:", error);
+      enqueueSnackbar("Error al agregar el evento", { variant: "error" });
+    }
   };
 
-  const handleEventChange = () => {
-    selectedEvent.setProp("title", newEvent.title);
+  const handleEventChange = async () => {
     selectedEvent.setStart(newEvent.start);
-    selectedEvent.setEnd(newEvent.end);
+    selectedEvent.setExtendedProp("recurrenceDay", newEvent.recurrenceDay);
+    selectedEvent.setExtendedProp("userId", newEvent.userId);
+    selectedEvent.setExtendedProp("rutinaId", newEvent.rutinaId);
     setOpenForm(false);
+
+    // Enviar la información del evento al backend
+    try {
+      const response = await AsignarRutina(newEvent);
+      if (response.status !== 200) {
+        throw new Error("Error al actualizar el evento");
+      }
+      enqueueSnackbar("Evento actualizado correctamente", {
+        variant: "success",
+      });
+      console.log("Evento actualizado:", response.data);
+    } catch (error) {
+      console.error("Error:", error);
+      enqueueSnackbar("Error al actualizar el evento", { variant: "error" });
+    }
   };
 
   const handleEventRemove = () => {
@@ -96,12 +127,20 @@ const HorarioAsignacion = () => {
     setOpenForm(false);
   };
 
-  const handleUserChange = (event) => {
-    setSelectedUser(event.target.value);
+  const handleUserChange = (value) => {
+    setNewEvent({ ...newEvent, userId: value });
+  };
+
+  const handleRutinaChange = (value) => {
+    setNewEvent({ ...newEvent, rutinaId: value });
+  };
+
+  const handleRecurrenceDayChange = (event) => {
+    setNewEvent({ ...newEvent, recurrenceDay: event.target.value });
   };
 
   const filteredEvents = events.filter(
-    (event) => event.userId === selectedUser
+    (event) => event.userId === newEvent.userId
   );
 
   return (
@@ -167,21 +206,6 @@ const HorarioAsignacion = () => {
           >
             Calendario de Eventos
           </Typography>
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel id="user-select-label">Seleccionar Usuario</InputLabel>
-            <Select
-              labelId="user-select-label"
-              value={selectedUser}
-              onChange={handleUserChange}
-              label="Seleccionar Usuario"
-            >
-              {users.map((user) => (
-                <MenuItem key={user.id} value={user.id}>
-                  {user.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <Button
             variant="contained"
             startIcon={<Add />}
@@ -269,17 +293,6 @@ const HorarioAsignacion = () => {
         <DialogContent dividers>
           <TextField
             margin="dense"
-            label="Título"
-            type="text"
-            fullWidth
-            value={newEvent.title}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, title: e.target.value })
-            }
-            variant="outlined"
-          />
-          <TextField
-            margin="dense"
             label="Fecha de Inicio"
             type="datetime-local"
             fullWidth
@@ -292,17 +305,33 @@ const HorarioAsignacion = () => {
             }}
             variant="outlined"
           />
-          <TextField
-            margin="dense"
-            label="Fecha de Fin"
-            type="datetime-local"
-            fullWidth
-            value={newEvent.end}
-            onChange={(e) => setNewEvent({ ...newEvent, end: e.target.value })}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="outlined"
+          <FormControl fullWidth variant="outlined" margin="normal">
+            <InputLabel id="recurrence-day-label">
+              Día de Recurrencia
+            </InputLabel>
+            <Select
+              labelId="recurrence-day-label"
+              id="recurrence-day"
+              value={newEvent.recurrenceDay}
+              onChange={handleRecurrenceDayChange}
+              label="Día de Recurrencia"
+            >
+              <MenuItem value="">
+                <em>Seleccione un día</em>
+              </MenuItem>
+              <MenuItem value={0}>Domingo</MenuItem>
+              <MenuItem value={1}>Lunes</MenuItem>
+              <MenuItem value={2}>Martes</MenuItem>
+              <MenuItem value={3}>Miércoles</MenuItem>
+              <MenuItem value={4}>Jueves</MenuItem>
+              <MenuItem value={5}>Viernes</MenuItem>
+              <MenuItem value={6}>Sábado</MenuItem>
+            </Select>
+          </FormControl>
+          <SelectUser onSelectionChange={handleUserChange} />
+          <SelectRutina
+            onSelectionChange={handleRutinaChange}
+            personaId={newEvent.userId}
           />
         </DialogContent>
         <DialogActions>

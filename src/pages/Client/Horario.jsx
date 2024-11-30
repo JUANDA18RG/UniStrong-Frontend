@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Calendar from "@fullcalendar/react";
 import listPlugin from "@fullcalendar/list";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -8,12 +8,49 @@ import { Card, Typography, Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Logo from "../../assets/images/Logo1.png";
 import { motion } from "framer-motion";
+import { TraerRutinasUsuario } from "../../api/Ejericios";
 import { varRotate } from "../../components/animate/variants/rotate";
+import { useAuth } from "../../context/authContext";
 
 const Horario = () => {
   const theme = useTheme();
   const calendarRef = useRef(null);
   const [events, setEvents] = useState([]);
+  const { additionalData } = useAuth();
+
+  useEffect(() => {
+    const fetchRutinas = async () => {
+      try {
+        const id = additionalData.id;
+        console.log("ID cliente:", id);
+        const response = await TraerRutinasUsuario(id);
+        if (response.status === 200) {
+          const data = response.data;
+          console.log("Datos recibidos:", data);
+
+          // Procesar los eventos asegurando que las fechas sean objetos Date válidos
+          const eventos = data.flatMap((rutina) =>
+            rutina.recurrentDates.map((date) => ({
+              title: rutina.name,
+              start: new Date(date), // Convertir a objeto Date
+            }))
+          );
+          console.log("Eventos procesados:", eventos);
+          setEvents(eventos);
+        } else {
+          console.error("Error al obtener las rutinas");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchRutinas();
+  }, [additionalData.id]);
+
+  useEffect(() => {
+    console.log("Eventos actualizados:", events);
+  }, [events]);
 
   return (
     <>
@@ -95,7 +132,8 @@ const Horario = () => {
               listPlugin,
             ]}
             initialView="dayGridMonth"
-            events={events}
+            initialDate="2025-01-01" // Mostrar enero 2025 como inicio
+            events={events} // Usar eventos del estado
             headerToolbar={{
               left: "prev,next today",
               center: "title",
@@ -109,7 +147,7 @@ const Horario = () => {
               list: "Lista",
             }}
             height="auto"
-            eventColor={theme.palette.redRYB.main}
+            eventBackgroundColor={theme.palette.redRYB.main}
             eventTextColor="#fff"
             selectable={false}
             editable={false}

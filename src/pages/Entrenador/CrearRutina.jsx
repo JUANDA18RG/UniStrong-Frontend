@@ -50,7 +50,7 @@ const CrearRutina = () => {
     defaultValues,
   });
   const { enqueueSnackbar } = useSnackbar();
-  const { User } = useAuth();
+  const { additionalData } = useAuth();
   const [error, setError] = useState("");
 
   const onSubmit = async (data) => {
@@ -58,7 +58,7 @@ const CrearRutina = () => {
       if (data.musclesWorked.length === 0) {
         throw new Error("Debes seleccionar al menos un músculo trabajado");
       }
-      const routineData = { ...data, coachId: User.id };
+      const routineData = { ...data, coachId: additionalData.id };
       const response = await RutinasCreate(routineData);
 
       if (response.status === 201) {
