@@ -31,6 +31,7 @@ import SelectRutina from "../../components/Select/SelectRutina";
 import { AsignarRutina } from "../../api/Ejericios";
 import { useAuth } from "../../context/authContext";
 import { useSnackbar } from "notistack";
+import { TraerRutinadeeEntrenador } from "../../api/Ejericios";
 
 const HorarioAsignacion = () => {
   const theme = useTheme();
@@ -142,6 +143,33 @@ const HorarioAsignacion = () => {
   const filteredEvents = events.filter(
     (event) => event.userId === newEvent.userId
   );
+
+  useEffect(() => {
+    const fetchRutinas = async () => {
+      try {
+        const response = await TraerRutinadeeEntrenador(additionalData.id);
+        console.log("Response:", response);
+        if (response.status !== 200) {
+          throw new Error("Error al obtener las rutinas");
+        }
+        console.log("Rutinas:", response.data);
+        const rutinas = response.data.map((rutina) => ({
+          id: rutina.id,
+          title: rutina.name,
+          start: rutina.scheduledDate,
+          userId: rutina.email,
+          rutinaId: rutina.routineId,
+          recurrenceDay: rutina.recurrenceDay,
+        }));
+        setEvents(rutinas);
+      } catch (error) {
+        console.error("Error:", error);
+        enqueueSnackbar("Error al obtener las rutinas", { variant: "error" });
+      }
+    };
+
+    fetchRutinas();
+  }, [additionalData.id, enqueueSnackbar]);
 
   return (
     <>

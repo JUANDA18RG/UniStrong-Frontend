@@ -55,7 +55,7 @@ function Login() {
     defaultValues,
   });
 
-  const { signin, isAuthenticated, typeUser,isFirstLogin } = useAuth();
+  const { signin, isAuthenticated, typeUser, isFirstLogin } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState("");
@@ -76,6 +76,9 @@ function Login() {
           case "nutriologo":
             navigate("/nutriologo", { replace: true });
             break;
+          case "admin":
+            navigate("/admin", { replace: true });
+            break;
           default:
             navigate("/Login", { replace: true });
             break;
@@ -83,7 +86,6 @@ function Login() {
       }
     }
   }, [isAuthenticated, typeUser, isFirstLogin, navigate]);
-  
 
   const onSubmit = async (data) => {
     try {
@@ -340,15 +342,15 @@ function Login() {
                   />
                 </Box>
 
-              <Box
-                component={Link}
-                to="/ForgotPassword"
-                variant="body2"
-                color="inherit"
-                sx={{ display: "block", textAlign: "right", mt: 1 }}
-              >
-                Forgot password?
-              </Box>
+                <Box
+                  component={Link}
+                  to="/ForgotPassword"
+                  variant="body2"
+                  color="inherit"
+                  sx={{ display: "block", textAlign: "right", mt: 1 }}
+                >
+                  Forgot password?
+                </Box>
 
                 <Button
                   type="submit"
