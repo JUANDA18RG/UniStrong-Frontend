@@ -10,28 +10,109 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import Logo from "../../assets/images/Logo1.png"; // Asegúrate de tener esta imagen en tu proyecto
+import { useSnackbar } from "notistack";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Logo from "../../assets/images/Logo1.png";
+import { registerRequest } from "../../api/auth";
+
+// Definir el esquema de validación con zod
+const schema = z.object({
+  name: z.string().min(1, "Nombre completo es requerido"),
+  email: z.string().email("Correo electrónico inválido"),
+  password: z
+    .string()
+    .min(10, "Contraseña debe tener al menos 10 caracteres")
+    .regex(/[A-Z]/, "Contraseña debe tener al menos una letra mayúscula")
+    .regex(/[a-z]/, "Contraseña debe tener al menos una letra minúscula")
+    .regex(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Contraseña debe tener al menos un carácter especial"
+    ),
+  userType: z.string().min(1, "Tipo de usuario es requerido"),
+  phoneNumber: z.string().min(1, "Número de teléfono es requerido"),
+  dni: z.string().min(1, "DNI es requerido"),
+  username: z
+    .string()
+    .min(6, "Nombre de usuario debe tener al menos 6 caracteres"),
+});
+
+const defaultValues = {
+  name: "",
+  email: "",
+  password: "",
+  userType: "",
+  phoneNumber: "",
+  dni: "",
+  username: "",
+};
 
 function FormularioCreacionUser() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    userType: "",
-    phoneNumber: "",
+  const { enqueueSnackbar } = useSnackbar();
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+    control,
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues,
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
   const handleUserTypeChange = (event, newUserType) => {
-    setForm({ ...form, userType: newUserType });
+    setValue("userType", newUserType);
   };
 
-  const handleSubmit = () => {
-    console.log("Usuario creado:", form);
+  const onSubmit = async (data) => {
+    let translatedUserType = "";
+    switch (data.userType) {
+      case "Entrenador":
+        translatedUserType = "coach";
+        break;
+      case "Nutriólogo":
+        translatedUserType = "nutriologo";
+        break;
+      case "Contador":
+        translatedUserType = "contador";
+        break;
+      default:
+        translatedUserType = "";
+    }
+
+    const userData = {
+      email: data.email,
+      name: data.name,
+      dni: data.dni,
+      username: data.username,
+      password: data.password,
+      phoneNumber: data.phoneNumber,
+      userType: translatedUserType,
+    };
+
+    try {
+      const response = await registerRequest(userData);
+      console.log(response);
+      if (response.status === 201) {
+        enqueueSnackbar("Usuario creado correctamente", {
+          variant: "success",
+        });
+        reset(); // Limpiar los campos del formulario
+      }
+    } catch (error) {
+      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || // Mensaje personalizado del servidor
+        (typeof error === "string" ? error : error.message);
+      setErrorMsg(errorMessage);
+      enqueueSnackbar(`Error: ${errorMessage}`, {
+        variant: "error",
+      });
+    }
   };
 
   return (
@@ -118,102 +199,153 @@ function FormularioCreacionUser() {
               Completa el formulario para crear un nuevo usuario
             </Typography>
           </Box>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Nombre"
-                type="text"
-                fullWidth
-                name="name"
-                value={form.name}
-                onChange={handleInputChange}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                Tipo de Usuario
-              </Typography>
-              <ToggleButtonGroup
-                value={form.userType}
-                exclusive
-                onChange={handleUserTypeChange}
-                fullWidth
-                sx={{
-                  "& .MuiToggleButton-root": {
-                    flex: 1,
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
-                    margin: "0 4px",
-                    "&.Mui-selected": {
-                      backgroundColor: "redRYB.main",
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: "redRYB.main",
-                      },
+          {!!errorMsg && (
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+              {errorMsg}
+            </Typography>
+          )}
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  margin="dense"
+                  label="Nombre"
+                  type="text"
+                  fullWidth
+                  name="name"
+                  error={!!errors.name}
+                  helperText={errors.name ? errors.name.message : ""}
+                  {...register("name")}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                  Tipo de Usuario
+                </Typography>
+                <Controller
+                  name="userType"
+                  control={control}
+                  render={({ field }) => (
+                    <ToggleButtonGroup
+                      value={field.value}
+                      exclusive
+                      onChange={(event, newValue) => {
+                        field.onChange(newValue);
+                      }}
+                      fullWidth
+                      sx={{
+                        "& .MuiToggleButton-root": {
+                          flex: 1,
+                          border: "1px solid #ccc",
+                          borderRadius: "8px",
+                          margin: "0 4px",
+                          "&.Mui-selected": {
+                            backgroundColor: "redRYB.main",
+                            color: "white",
+                            "&:hover": {
+                              backgroundColor: "redRYB.main",
+                            },
+                          },
+                        },
+                      }}
+                    >
+                      <ToggleButton value="Entrenador">Entrenador</ToggleButton>
+                      <ToggleButton value="Nutriólogo">Nutriólogo</ToggleButton>
+                      <ToggleButton value="Contador">Contador</ToggleButton>
+                    </ToggleButtonGroup>
+                  )}
+                />
+                {errors.userType && (
+                  <Typography variant="body2" color="error">
+                    {errors.userType.message}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="dense"
+                  label="Correo"
+                  type="email"
+                  fullWidth
+                  name="email"
+                  error={!!errors.email}
+                  helperText={errors.email ? errors.email.message : ""}
+                  {...register("email")}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="dense"
+                  label="Contraseña"
+                  type="password"
+                  fullWidth
+                  name="password"
+                  error={!!errors.password}
+                  helperText={errors.password ? errors.password.message : ""}
+                  {...register("password")}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="dense"
+                  label="Número de Teléfono"
+                  type="tel"
+                  fullWidth
+                  name="phoneNumber"
+                  error={!!errors.phoneNumber}
+                  helperText={
+                    errors.phoneNumber ? errors.phoneNumber.message : ""
+                  }
+                  {...register("phoneNumber")}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="dense"
+                  label="DNI"
+                  type="text"
+                  fullWidth
+                  name="dni"
+                  error={!!errors.dni}
+                  helperText={errors.dni ? errors.dni.message : ""}
+                  {...register("dni")}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="dense"
+                  label="Nombre de Usuario"
+                  type="text"
+                  fullWidth
+                  name="username"
+                  error={!!errors.username}
+                  helperText={errors.username ? errors.username.message : ""}
+                  {...register("username")}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    backgroundColor: "redRYB.main",
+                    "&:hover": {
+                      backgroundColor: "redPigment.main",
                     },
-                  },
-                }}
-              >
-                <ToggleButton value="Entrenador">Entrenador</ToggleButton>
-                <ToggleButton value="Nutriólogo">Nutriólogo</ToggleButton>
-                <ToggleButton value="Contador">Contador</ToggleButton>
-              </ToggleButtonGroup>
+                  }}
+                >
+                  Crear Usuario
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Correo"
-                type="email"
-                fullWidth
-                name="email"
-                value={form.email}
-                onChange={handleInputChange}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Contraseña"
-                type="password"
-                fullWidth
-                name="password"
-                value={form.password}
-                onChange={handleInputChange}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin="dense"
-                label="Número de Teléfono"
-                type="tel"
-                fullWidth
-                name="phoneNumber"
-                value={form.phoneNumber}
-                onChange={handleInputChange}
-                variant="outlined"
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: "redRYB.main",
-                  "&:hover": {
-                    backgroundColor: "redPigment.main",
-                  },
-                }}
-              >
-                Crear Usuario
-              </Button>
-            </Grid>
-          </Grid>
+          </form>
         </Card>
       </Box>
     </Box>
