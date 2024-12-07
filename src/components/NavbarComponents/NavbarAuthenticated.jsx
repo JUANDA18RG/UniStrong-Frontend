@@ -22,7 +22,6 @@ import { useSnackbar } from "notistack";
 
 import HomeIcon from "@mui/icons-material/Home";
 
-
 const ModalNavButton = styled(Button)(({ theme }) => ({
   borderBottom: "3px solid transparent",
   fontSize: 28,
@@ -41,11 +40,9 @@ const NavbarAuthenticated = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const goToSettings = () => {
-    setIsOpen(false);  
-    navigate('/settings'); 
+    setIsOpen(false);
+    navigate("/settings");
   };
-
-  
 
   const CerrarSesion = async () => {
     const response = await signout();
@@ -63,6 +60,7 @@ const NavbarAuthenticated = () => {
   };
 
   const handleRedirection = () => {
+    console.log("Redireccionando, tipo de usuario:", typeUser);
     if (typeUser) {
       switch (typeUser) {
         case "cliente":
@@ -74,17 +72,22 @@ const NavbarAuthenticated = () => {
         case "nutriologo":
           navigate("/nutriologo", { replace: true });
           break;
+        case "admin":
+          navigate("/admin", { replace: true });
+          break;
         default:
-          navigate("/Inicio", { replace: true });
+          navigate("/", { replace: true });
           break;
       }
       setIsOpen(false);
+    } else {
+      console.error("Tipo de usuario no definido");
     }
   };
 
   useEffect(() => {
     const today = new Date();
-    const formattedDate = today.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const formattedDate = today.toISOString().split("T")[0];
     setCurrentDate(formattedDate);
   }, []);
 
@@ -175,23 +178,24 @@ const NavbarAuthenticated = () => {
           >
             Inicio
           </ModalNavButton>
-          <ModalNavButton
-            component={NavLink}
-            to={`/user/${User.id}`}
-            onClick={() => setIsOpen(false)}
-            color="cultured"
-            startIcon={<AccountCircleIcon style={{ fontSize: 35 }} />}
-          >
-            Perfil
-          </ModalNavButton>
+          {typeUser === "cliente" && (
+            <ModalNavButton
+              component={NavLink}
+              to={`/user/${User.id}`}
+              onClick={() => setIsOpen(false)}
+              color="cultured"
+              startIcon={<AccountCircleIcon style={{ fontSize: 35 }} />}
+            >
+              Perfil
+            </ModalNavButton>
+          )}
           <ModalNavButton
             onClick={goToSettings}
             color="cultured"
             startIcon={<SettingsIcon style={{ fontSize: 35 }} />}
           >
-           Configuración
+            Configuración
           </ModalNavButton>
-
           <ModalNavButton
             onClick={CerrarSesion}
             color="cultured"
@@ -199,7 +203,6 @@ const NavbarAuthenticated = () => {
           >
             Cerrar Sesión
           </ModalNavButton>
-          
         </Stack>
       </Modal>
     </>
