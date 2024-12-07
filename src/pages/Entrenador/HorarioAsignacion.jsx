@@ -31,6 +31,7 @@ import SelectRutina from "../../components/Select/SelectRutina";
 import { AsignarRutina } from "../../api/Ejericios";
 import { useAuth } from "../../context/authContext";
 import { useSnackbar } from "notistack";
+import { TraerRutinadeeEntrenador } from "../../api/Ejericios";
 
 const HorarioAsignacion = () => {
   const theme = useTheme();
@@ -71,11 +72,6 @@ const HorarioAsignacion = () => {
   };
 
   const handleEventAdd = async () => {
-    const calendarApi = calendarRef.current.getApi();
-    calendarApi.addEvent(newEvent);
-    setEvents([...events, newEvent]);
-    setOpenForm(false);
-
     // Enviar la información del evento al backend
     try {
       console.log("Evento a agregar:", newEvent);
@@ -92,6 +88,9 @@ const HorarioAsignacion = () => {
       }
       enqueueSnackbar("Evento agregado correctamente", { variant: "success" });
       console.log("Evento agregado:", response.data);
+
+      // Recargar la página
+      window.location.reload();
     } catch (error) {
       console.error("Error:", error);
       enqueueSnackbar("Error al agregar el evento", { variant: "error" });
@@ -99,12 +98,6 @@ const HorarioAsignacion = () => {
   };
 
   const handleEventChange = async () => {
-    selectedEvent.setStart(newEvent.start);
-    selectedEvent.setExtendedProp("recurrenceDay", newEvent.recurrenceDay);
-    selectedEvent.setExtendedProp("userId", newEvent.userId);
-    selectedEvent.setExtendedProp("rutinaId", newEvent.rutinaId);
-    setOpenForm(false);
-
     // Enviar la información del evento al backend
     try {
       const response = await AsignarRutina(newEvent);
@@ -115,6 +108,9 @@ const HorarioAsignacion = () => {
         variant: "success",
       });
       console.log("Evento actualizado:", response.data);
+
+      // Recargar la página
+      window.location.reload();
     } catch (error) {
       console.error("Error:", error);
       enqueueSnackbar("Error al actualizar el evento", { variant: "error" });
@@ -139,9 +135,59 @@ const HorarioAsignacion = () => {
     setNewEvent({ ...newEvent, recurrenceDay: event.target.value });
   };
 
-  const filteredEvents = events.filter(
-    (event) => event.userId === newEvent.userId
-  );
+  useEffect(() => {
+    const fetchRutinas = async () => {
+      try {
+        const response = await TraerRutinadeeEntrenador(additionalData.id);
+        console.log("Response:", response);
+        if (response.status !== 200) {
+          throw new Error("Error al obtener las rutinas");
+        }
+        console.log("Rutinas:", response.data);
+
+        // Mapa de colores para los clientes
+        const colorMap = {};
+        const colors = [
+          "#FF5733",
+          "#33FF57",
+          "#3357FF",
+          "#FF33A1",
+          "#FF8C33",
+          "#33FFF5",
+          "#8C33FF",
+        ];
+        let colorIndex = 0;
+
+        // Transformar los datos recibidos en eventos para el calendario
+        const rutinas = response.data.flatMap((rutina) =>
+          rutina.clients.flatMap((client) => {
+            if (!colorMap[client.user_id]) {
+              colorMap[client.user_id] = colors[colorIndex % colors.length];
+              colorIndex++;
+            }
+            return client.client_routines.recurrentDates.map((date) => ({
+              id: rutina.id,
+              title: rutina.name,
+              start: date,
+              userId: client.user_id,
+              rutinaId: rutina.id,
+              recurrenceDay: client.client_routines.recurrenceDay,
+              backgroundColor: colorMap[client.user_id],
+              borderColor: colorMap[client.user_id],
+            }));
+          })
+        );
+
+        // Actualizar el estado de los eventos
+        setEvents(rutinas);
+      } catch (error) {
+        console.error("Error:", error);
+        enqueueSnackbar("Error al obtener las rutinas", { variant: "error" });
+      }
+    };
+
+    fetchRutinas();
+  }, [additionalData.id, enqueueSnackbar]);
 
   return (
     <>
@@ -219,7 +265,7 @@ const HorarioAsignacion = () => {
               transition: "transform 0.3s",
             }}
           >
-            Nuevo Evento
+            Asignar Rutina
           </Button>
         </Stack>
         <Card
@@ -240,7 +286,7 @@ const HorarioAsignacion = () => {
             initialView="dayGridMonth"
             selectable
             editable
-            events={filteredEvents}
+            events={events}
             select={handleDateSelect}
             eventClick={handleEventClick}
             headerToolbar={{
@@ -256,7 +302,6 @@ const HorarioAsignacion = () => {
               list: "Lista",
             }}
             height="auto"
-            eventColor={theme.palette.redRYB.main}
             eventTextColor="#fff"
           />
         </Card>
@@ -331,7 +376,7 @@ const HorarioAsignacion = () => {
           <SelectUser onSelectionChange={handleUserChange} />
           <SelectRutina
             onSelectionChange={handleRutinaChange}
-            personaId={newEvent.userId}
+            personaId={additionalData.id}
           />
         </DialogContent>
         <DialogActions>

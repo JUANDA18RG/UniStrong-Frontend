@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { ObtenerRutina } from "../../api/Ejericios";
+import { TraerRutinadeeEntrenador } from "../../api/Ejericios";
 
 const SelectRutina = ({ onSelectionChange, personaId }) => {
   const [selectedOption, setSelectedOption] = useState("");
@@ -9,7 +9,8 @@ const SelectRutina = ({ onSelectionChange, personaId }) => {
   useEffect(() => {
     const fetchRutinas = async () => {
       try {
-        const response = await ObtenerRutina(personaId);
+        const response = await TraerRutinadeeEntrenador(personaId);
+        console.log("Rutinas obtenidas:", response.data);
         setRutinas(response.data);
       } catch (error) {
         console.error("Error al obtener las rutinas:", error);
