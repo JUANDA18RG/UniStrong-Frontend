@@ -48,7 +48,7 @@ function WelcomePage() {
             initial="initial"
             animate="animate"
             exit="exit"
-            variants={varBounce().in} // Utilizando correctamente varBounce
+            variants={varBounce().in}
           >
             <Box sx={{ position: "relative", zIndex: 1 }}>
               <Typography variant="h2" component="h1" gutterBottom>

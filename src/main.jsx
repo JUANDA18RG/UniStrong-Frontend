@@ -24,12 +24,12 @@ const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
 const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const Settings = lazy(() => import("./components/Settings"));
 const Mensualidad = lazy(() => import("./pages/Mensualidad"));
-const CompleteForm  =lazy(()=> import ("./pages/Client/CompleteForm"));    
-const Membership  =lazy(()=> import ("./pages/Client/Membership"));    
-const Routines  =lazy(()=> import ("./components/Routines"));
+const CompleteForm = lazy(() => import("./pages/Client/CompleteForm"));
+const Membership = lazy(() => import("./pages/Client/Membership"));
+const Admin = lazy(() => import("./sections/Admin.jsx"));
+const Routines = lazy(() => import("./components/Routines"));
 const ViewUsers  =lazy(()=> import ("./pages/Entrenador/VisualizarUsuarios"));
 
-ViewUsers
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -54,16 +54,17 @@ root.render(
                         element={<ForgotPassword />}
                       />
                       <Route path="/Settings" element={<Settings />} />
-                      <Route path="/Routines" element={<Routines />}/>
-                      <Route path="/CompleteForm" element={<CompleteForm />}/>
-                      <Route path="/Membership" element={<Membership />}/>
-                      
+                      <Route path="/Routines" element={<Routines />} />
+                      <Route path="/CompleteForm" element={<CompleteForm />} />
+                      <Route path="/Membership" element={<Membership />} />
+
                       <Route path="*" element={<NoMatch />} />
                       <Route element={<ProtectedRoute />}>
                         <Route path="/cliente" element={<Client />} />
                         <Route path="/coach" element={<Entrenador />} />
                         <Route path="/nutriologo" element={<Nutriologo />} />
                         <Route path="/user/:id" element={<User />} />
+                        <Route path="/admin" element={<Admin />} />
                       </Route>
                       <Route path="/validacion" element={<PageValidacion />} />
                       <Route path="/Visualizar" element={<ViewUsers />}/>
