@@ -147,7 +147,8 @@ function User() {
           >
             Mis Entrenamientos
           </Button>
-          <Button variant="contained" color="jet" startIcon={<SettingsIcon />}>
+          <Button variant="contained" color="jet" startIcon={<SettingsIcon />}
+            onClick={() => navigate('/Visualizar')} >
             Configuración
           </Button>
           <Button variant="contained" color="redRYB" startIcon={<LogoutIcon />}>

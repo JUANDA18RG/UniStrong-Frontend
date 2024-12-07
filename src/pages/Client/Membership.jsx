@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, Typography, Button, Grid } from "@mui/material";
-import { membresiaRequest } from "../api/auth.js";
+import { membresiaRequest } from "../../api/auth.js";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 

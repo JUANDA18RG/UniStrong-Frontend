@@ -24,11 +24,12 @@ const PageValidacion = lazy(() => import("./pages/pageValidacion.jsx"));
 const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const Settings = lazy(() => import("./components/Settings"));
 const Mensualidad = lazy(() => import("./pages/Mensualidad"));
-const CompleteForm  =lazy(()=> import ("./components/CompleteForm"));    
-const Membership  =lazy(()=> import ("./components/Membership"));    
+const CompleteForm  =lazy(()=> import ("./pages/Client/CompleteForm"));    
+const Membership  =lazy(()=> import ("./pages/Client/Membership"));    
 const Routines  =lazy(()=> import ("./components/Routines"));
+const ViewUsers  =lazy(()=> import ("./pages/Entrenador/VisualizarUsuarios"));
 
-
+ViewUsers
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -65,6 +66,7 @@ root.render(
                         <Route path="/user/:id" element={<User />} />
                       </Route>
                       <Route path="/validacion" element={<PageValidacion />} />
+                      <Route path="/Visualizar" element={<ViewUsers />}/>
                     </Route>
                   </Routes>
                 </VerificationProvider>
