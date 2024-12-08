@@ -28,7 +28,7 @@ const CompleteForm = lazy(() => import("./pages/Client/CompleteForm"));
 const Membership = lazy(() => import("./pages/Client/Membership"));
 const Admin = lazy(() => import("./sections/Admin.jsx"));
 const Routines = lazy(() => import("./components/Routines"));
-const ViewUsers  =lazy(()=> import ("./pages/Entrenador/VisualizarUsuarios"));
+const ViewUsers  =lazy(()=> import ("./pages/Administrador/VisualizarUsuarios.jsx"));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

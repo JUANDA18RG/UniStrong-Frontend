@@ -13,6 +13,7 @@ import {
   Switch,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom"; 
 import Logo from "../../assets/images/Logo1.png"; // Asegúrate de tener esta imagen en tu proyecto
 
 const usuarios = [
@@ -23,6 +24,7 @@ const usuarios = [
 ];
 
 function UserState() {
+  const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState("Entrenador");
   const [userList, setUserList] = useState(usuarios);
 
@@ -98,6 +100,24 @@ function UserState() {
             >
               Gestión de Usuarios
             </Typography>
+            <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              backgroundColor: "redRYB.main",
+              "&:hover": {
+                backgroundColor: "redPigment.main",
+              },
+              mt: 2,
+              width: "200px", 
+              marginBottom: "10px",
+              
+
+            }}
+            onClick={() => navigate('/Visualizar')} 
+          >
+            Visulizar Usuarios
+          </Button>
             <Typography variant="subtitle1">
               Cambia el estado de los usuarios por tipo
             </Typography>
