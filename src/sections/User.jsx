@@ -143,6 +143,7 @@ function User() {
             variant="contained"
             color="redRYB"
             startIcon={<FitnessCenterIcon />} 
+            onClick={() => navigate("/Routines")}
           >
             Mis Entrenamientos
           </Button>

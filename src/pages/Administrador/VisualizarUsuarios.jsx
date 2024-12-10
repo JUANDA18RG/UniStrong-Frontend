@@ -92,7 +92,7 @@ const ViewUsers = () => {
                         Usuarios registrados
                     </Typography>
 
-                    {/* Filtro de tipo de usuario mejorado */}
+
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', paddingRight: 2, marginBottom: 1 }}>
                         <FormControl sx={{ minWidth: 150 }}>
                             <InputLabel>Filtrar por tipo</InputLabel>
