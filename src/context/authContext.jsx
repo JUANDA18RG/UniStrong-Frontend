@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           setUser(res.data.user);
           setIsAuthenticated(true);
-          setIsVerified(res.data.user.state);
+          setIsVerified(res.data.user.infoClienteVerified);
           setisFirstLogin(res.data.infoClientRegistered);
           const storedAdditionalData = localStorage.getItem("additionalData");
           if (storedAdditionalData) {
@@ -80,8 +80,8 @@ export const AuthProvider = ({ children }) => {
       );
       console.log("informacioAdicional", response.data.user.additionalData);
       setIsAuthenticated(true);
-      setIsVerified(response.data.user.state);
-      console.log("Estado de validación:", response.data.user.state);
+      setIsVerified(response.data.user.infoClienteVerified);
+      console.log("Estado de validación:", response.data.user.infoClienteVerified);
       setTypeUser(response.data.user.userType);
       console.log("tipo de usuario", response.data.user.userType);
       setisFirstLogin(response.data.infoClientRegistered);
