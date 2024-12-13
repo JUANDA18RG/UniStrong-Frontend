@@ -21,7 +21,7 @@ const DiasDeMembresia = ({ userId }) => {
           setDíasMembresía(remainingDays);
           setMensaje(message);
           if (remainingDays < 0) {
-            setMensaje("La membresía ya está vencida.");
+            setError("No tienes membresías pagadas.");
           }
         } else {
           setError("No se recibió la respuesta esperada.");

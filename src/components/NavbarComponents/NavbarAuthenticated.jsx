@@ -116,6 +116,8 @@ const NavbarAuthenticated = () => {
           </Typography>
         </Typography>
         
+        <Typography variant="subtitle1" component="p" sx={{ marginBottom: 1 }} />
+
           {/* Dias de membresia */}
          {typeUser === "cliente" && (
          <Typography variant="subtitle1" component="p">
