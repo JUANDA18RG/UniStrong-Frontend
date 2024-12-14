@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import SettingsIcon from "@mui/icons-material/Settings";
+import DiasDeMembresia from "../../pages/Client/DiasdeMembresia.jsx";
+
 
 import {
   Stack,
@@ -38,6 +40,7 @@ const NavbarAuthenticated = () => {
   const { signout, User, typeUser } = useAuth();
   const [currentDate, setCurrentDate] = useState("");
   const { enqueueSnackbar } = useSnackbar();
+  const userId = User?.id;
 
   const goToSettings = () => {
     setIsOpen(false);
@@ -58,6 +61,9 @@ const NavbarAuthenticated = () => {
     }
     setIsOpen(false);
   };
+
+
+
 
   const handleRedirection = () => {
     console.log("Redireccionando, tipo de usuario:", typeUser);
@@ -109,6 +115,21 @@ const NavbarAuthenticated = () => {
             {` ${currentDate}`}
           </Typography>
         </Typography>
+        
+          {/* Dias de membresia */}
+         {typeUser === "cliente" && (
+         <Typography variant="subtitle1" component="p">
+          <Typography
+            variant="subtitle1"
+            component="span"
+            sx={{ color: "redRYB.main" }}
+          >
+            <DiasDeMembresia userId={User.id} />
+          </Typography>
+        </Typography>
+      )}
+     
+
       </Stack>
       <Stack
         direction="row"

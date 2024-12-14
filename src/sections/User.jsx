@@ -142,12 +142,13 @@ function User() {
           <Button
             variant="contained"
             color="redRYB"
-            startIcon={<FitnessCenterIcon />}
-            onClick={() => navigate('/routines')} 
+            startIcon={<FitnessCenterIcon />} 
+            onClick={() => navigate("/Routines")}
           >
             Mis Entrenamientos
           </Button>
-          <Button variant="contained" color="jet" startIcon={<SettingsIcon />}>
+          <Button variant="contained" color="jet" startIcon={<SettingsIcon />}
+            >
             Configuración
           </Button>
           <Button variant="contained" color="redRYB" startIcon={<LogoutIcon />}>

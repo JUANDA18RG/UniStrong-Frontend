@@ -1,4 +1,5 @@
 import { Ejercicios , instance} from "./axios";
+import Cookies from 'js-cookie';
 
 export const TraerEjercicios = () => Ejercicios.get(`/exercises`);
 
@@ -21,3 +22,13 @@ export const AsignarCoach = (data) => instance.post(`/admin/assignCoach`, data);
 export const TraerUsuarios = () => instance.get(`/user/`);
 
 export const DesactivarUser = (data) => instance.post(`/admin/deactivateUsers`, data);
+
+
+export const diasDeMembresia = (userId) => {
+    return instance.post('/membership/remainingDays', { userId } );
+  };
+    
+  
+
+
+

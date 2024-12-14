@@ -12,6 +12,7 @@ import {
   Switch,
 } from "@mui/material";
 import { motion } from "framer-motion";
+
 import Logo from "../../assets/images/Logo1.png";
 import { TraerUsuarios, DesactivarUser } from "../../api/Ejericios";
 import { useSnackbar } from "notistack";
@@ -21,6 +22,7 @@ function UserState() {
   const [userList, setUserList] = useState([]);
   const [changedUsers, setChangedUsers] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+
 
   const handleTypeChange = (event, newType) => {
     if (newType !== null) {
@@ -146,6 +148,24 @@ function UserState() {
             >
               Gestión de Usuarios
             </Typography>
+            <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              backgroundColor: "redRYB.main",
+              "&:hover": {
+                backgroundColor: "redPigment.main",
+              },
+              mt: 2,
+              width: "200px", 
+              marginBottom: "10px",
+              
+
+            }}
+            onClick={() => navigate('/Visualizar')} 
+          >
+            Visulizar Usuarios
+          </Button>
             <Typography variant="subtitle1">
               Cambia el estado de los usuarios por tipo
             </Typography>

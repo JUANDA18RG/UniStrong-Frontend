@@ -3,6 +3,7 @@ import Form from "../pages/Administrador/FormularioCreacionUser";
 import State from "../pages/Administrador/userState";
 import Asignacion from "../pages/Administrador/AsignacionEntrenador";
 
+
 import { CONFIG } from "../config-global";
 
 import { Helmet } from "react-helmet-async";
@@ -17,8 +18,10 @@ const Inicio = () => {
       </Helmet>
       <Presentacion />
       <Form />
+    
       <State />
       <Asignacion />
+      
     </>
   );
 };

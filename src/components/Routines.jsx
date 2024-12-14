@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {FitnessCenter } from '@mui/icons-material';
 import { Card, Grid, CardContent, Typography, Stack, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
-import { ObtenerRutinas } from "../api/Ejericios";
+import { TraerRutinasUsuario } from "../api/Ejericios";
+import { useAuth } from "../context/authContext";
 
 const Routines = () => {
   
@@ -9,6 +10,9 @@ const Routines = () => {
   const [rutinas, setRutinas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { User } = useAuth();
+  const id = User?.id;
   
   const handleCardClick = (rutina) => {
     setSelectedRutina(rutina);
@@ -24,7 +28,7 @@ const Routines = () => {
   const obtenerRutinas = async () => {
     setLoading(true);
     try {
-      const response = await ObtenerRutinas();
+      const response = await TraerRutinasUsuario(id);
       const responseData = response.data;
       if (Array.isArray(responseData)) {
         console.log('Rutinas:', response);
@@ -146,6 +150,11 @@ const Routines = () => {
               ))}
             </ul>
           </Typography>
+
+          <Typography variant="body2" sx={{ lineHeight: 1.6, fontSize: '1rem', color: '#555', marginBottom: 2 }}>
+            <strong>Dias:</strong> {selectedRutina?.recurrenceDay}
+            </Typography>
+
           </DialogContent>
           <DialogActions sx={{ padding: 2, justifyContent: 'center'}}>
             <Button
