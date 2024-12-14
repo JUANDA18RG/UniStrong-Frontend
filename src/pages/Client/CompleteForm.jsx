@@ -204,8 +204,6 @@ function CompleteForm() {
                   error={!!errors.height}  
                   helperText={errors.height ? errors.height.message : ""}
                 />
-
-
               </Grid>
               
                 <Grid item xs={12} sm={6}>
@@ -263,6 +261,7 @@ function CompleteForm() {
                 <MenuItem value="Alta en Proteínas">Alta en Proteínas</MenuItem>
                 <MenuItem value="Sin Frutos Secos">Sin Frutos Secos</MenuItem>
                 <MenuItem value="Keto">Keto</MenuItem>
+                <MenuItem value="Ninguna">Ninguna</MenuItem>
               </Select>
               {errors.dietaryRestrictions && <FormHelperText>{errors.dietaryRestrictions.message}</FormHelperText>}
              </FormControl>

@@ -29,6 +29,8 @@ const Membership = lazy(() => import("./pages/Client/Membership"));
 const Admin = lazy(() => import("./sections/Admin.jsx"));
 const Routines = lazy(() => import("./components/Routines"));
 const ViewUsers  =lazy(()=> import ("./pages/Administrador/VisualizarUsuarios.jsx"));
+const ActualizarInformacion =lazy(()=> import ("./pages/Client/ActualizarDatos.jsx"));
+const DatosFisicos =lazy (()=> import ("./pages/Client/DatosFisicos.jsx"));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -68,6 +70,9 @@ root.render(
                       </Route>
                       <Route path="/validacion" element={<PageValidacion />} />
                       <Route path="/Visualizar" element={<ViewUsers />}/>
+                      <Route path="/ActualizarInfo" element={<ActualizarInformacion />}/>
+                      <Route path="/DatosFisicos" element={<DatosFisicos/>}/>
+                      
                     </Route>
                   </Routes>
                 </VerificationProvider>
