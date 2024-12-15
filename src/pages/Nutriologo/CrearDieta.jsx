@@ -37,17 +37,18 @@ function CrearDieta() {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = async () => {
-    const nutritionistId = 1; // Este es el ID que se agrega automáticamente y no se muestra en el formulario
-
-    // Creando el objeto para enviar
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Evita el comportamiento por defecto del formulario
+  
+    const nutritionistId = 1; // ID del nutricionista
+  
     const dietData = {
       name: form.name,
       description: form.description,
       type: form.type,
       nutritionistId: nutritionistId,
     };
-
+  
     try {
       const response = await fetch("http://localhost:3001/diet/create", {
         method: "POST",
@@ -56,28 +57,30 @@ function CrearDieta() {
         },
         body: JSON.stringify(dietData),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         console.log("Dieta creada:", result);
-
+  
         // Mostrar un mensaje de éxito usando enqueueSnackbar
         enqueueSnackbar("Dieta creada con éxito", { variant: "success" });
-
-        // Aquí puedes agregar lógica para manejar la respuesta
+  
+        // Recargar la página para mostrar los cambios
+        window.location.reload();
       } else {
         console.error("Error al crear la dieta");
-
+  
         // Mostrar un mensaje de error usando enqueueSnackbar
         enqueueSnackbar("Error al crear la dieta", { variant: "error" });
       }
     } catch (error) {
       console.error("Error de conexión:", error);
-
+  
       // Mostrar un mensaje de error de conexión
       enqueueSnackbar("Error de conexión", { variant: "error" });
     }
   };
+  
 
   const usuarios = ["Usuario 1", "Usuario 2", "Usuario 3"];
 
