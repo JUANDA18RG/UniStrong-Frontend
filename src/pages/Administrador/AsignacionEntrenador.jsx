@@ -4,44 +4,60 @@ import {
   Button,
   Card,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   Typography,
   Grid,
+  Alert,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import Logo from "../../assets/images/Logo1.png"; // Asegúrate de tener esta imagen en tu proyecto
-
-const usuarios = [
-  { id: 1, email: "usuario1@example.com" },
-  { id: 2, email: "usuario2@example.com" },
-  { id: 3, email: "usuario3@example.com" },
-];
-
-const entrenadores = [
-  { id: 1, email: "entrenador1@example.com" },
-  { id: 2, email: "entrenador2@example.com" },
-  { id: 3, email: "entrenador3@example.com" },
-];
+import { useSnackbar } from "notistack";
+import Logo from "../../assets/images/Logo1.png";
+import SelectUser from "../../components/Select/SelelectUser";
+import SelectCoach from "../../components/Select/SelectCoach";
+import { AsignarCoach } from "../../api/Ejericios";
 
 function AsignacionEntrenador() {
+  const { enqueueSnackbar } = useSnackbar();
   const [selectedUsuario, setSelectedUsuario] = useState("");
   const [selectedEntrenador, setSelectedEntrenador] = useState("");
+  const [error, setError] = useState("");
 
-  const handleUsuarioChange = (event) => {
-    setSelectedUsuario(event.target.value);
+  const handleUserChange = (value) => {
+    setSelectedUsuario(value);
   };
 
-  const handleEntrenadorChange = (event) => {
-    setSelectedEntrenador(event.target.value);
+  const handleCoachChange = (value) => {
+    setSelectedEntrenador(value);
   };
 
-  const handleSubmit = () => {
-    console.log("Asignación:", {
-      usuario: selectedUsuario,
-      entrenador: selectedEntrenador,
-    });
+  const handleSubmit = async () => {
+    try {
+      const response = await AsignarCoach({
+        clientEmail: selectedUsuario,
+        coachEmail: selectedEntrenador,
+      });
+      console.log("response", response);
+      if (response && response.status === 200) {
+        enqueueSnackbar("Asignación exitosa", {
+          variant: "success",
+        });
+        setSelectedUsuario(""); // Limpiar el select de usuario
+        setSelectedEntrenador(""); // Limpiar el select de entrenador
+        setError("");
+      } else {
+        enqueueSnackbar("Error al asignar usuario", {
+          variant: "error",
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || // Mensaje personalizado del servidor
+        (typeof error === "string" ? error : error.message);
+      setError(errorMessage);
+      console.error("Error al asignar usuario", errorMessage);
+      enqueueSnackbar(`Error: ${errorMessage}`, {
+        variant: "error",
+      });
+    }
   };
 
   return (
@@ -64,9 +80,7 @@ function AsignacionEntrenador() {
         }}
       >
         <motion.img
-          src={
-            "https://rare-gallery.com/uploads/posts/877870-rope-Fitness-Gym-Workout.jpg"
-          }
+          src={"https://images7.alphacoders.com/130/1308025.jpg"}
           alt="Entrenador"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -136,22 +150,18 @@ function AsignacionEntrenador() {
               entrenamiento personalizado para el usuario.
             </Typography>
           </Box>
+          {!!error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={12} sm={5}>
               <FormControl fullWidth>
-                <InputLabel id="usuario-label">Correo del Usuario</InputLabel>
-                <Select
-                  labelId="usuario-label"
+                <SelectUser
                   value={selectedUsuario}
-                  label="Correo del Usuario"
-                  onChange={handleUsuarioChange}
-                >
-                  {usuarios.map((usuario) => (
-                    <MenuItem key={usuario.id} value={usuario.email}>
-                      {usuario.email}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  onSelectionChange={handleUserChange}
+                />
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={2} sx={{ textAlign: "center" }}>
@@ -161,21 +171,10 @@ function AsignacionEntrenador() {
             </Grid>
             <Grid item xs={12} sm={5}>
               <FormControl fullWidth>
-                <InputLabel id="entrenador-label">
-                  Correo del Entrenador
-                </InputLabel>
-                <Select
-                  labelId="entrenador-label"
+                <SelectCoach
                   value={selectedEntrenador}
-                  label="Correo del Entrenador"
-                  onChange={handleEntrenadorChange}
-                >
-                  {entrenadores.map((entrenador) => (
-                    <MenuItem key={entrenador.id} value={entrenador.email}>
-                      {entrenador.email}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  onSelectionChange={handleCoachChange}
+                />
               </FormControl>
             </Grid>
             <Grid item xs={12}>

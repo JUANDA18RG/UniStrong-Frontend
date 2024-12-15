@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TextField, Button, Typography, Stack, Box, Grid, Fab, Menu, MenuItem, CircularProgress, Snackbar, Alert } from "@mui/material";
+import {TextField, Button, Typography, Stack, Box, Grid, Fab, Menu, MenuItem, CircularProgress, Snackbar, Alert } from "@mui/material";
 import { PictureAsPdf } from "@mui/icons-material";
 import { useAuth } from "../../context/authContext";
 import { sendPdfByEmail } from "../../api/generarPdf";
+import {actualizarDatosFisicosRequest} from "../../api/editar.js";
 import { useSnackbar } from "notistack";
 
-
 const DatosFisicos = () => {
-  const [informacion, setInformacion] = useState({
+    const {User} = useAuth();
+    const iduser = User?.id;
+    const {enqueueSnackbar} = useSnackbar();
+    const [informacion, setInformacion] = useState({
       weight:"",
       height: "",
       waist:"",
@@ -17,11 +20,52 @@ const DatosFisicos = () => {
       chest:"",
       glutes:"",
     });
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+      const handleUpdate = async () => {
+
+        setLoading(true);
+        setError("");
+        console.log("Datos a enviar:", informacion);
+        try {
+          const response = await actualizarDatosFisicosRequest(iduser, informacion);
+          if (response?.status === 200) {
+            enqueueSnackbar("¡Nuevas medidas registradas correctamente!",{variant: 'success'});
+            setInformacion((prevState) => ({
+              ...prevState,
+              weight:"",
+              height: "",
+              waist:"",
+              legs: "",
+              arms: "",
+              chest:"",
+              glutes:"",
+            }));
+          } else {
+            setError({message:response?.data?.message || "Error al registrar las medidas"});
+            enqueueSnackbar("Error al registrar las medidas",{variant: 'error'});
+            setInformacion((prevState) => ({
+              ...prevState,
+              weight:"",
+              height: "",
+              waist:"",
+              legs: "",
+              arms: "",
+              chest:"",
+              glutes:"",
+            }));
+          }
+        } catch (error) {
+          const errorMessage = error.response.data.message || "Error desconocido"
+          enqueueSnackbar(errorMessage,{variant: 'error'});
+        } finally {
+          setLoading(false);
+        }
+      };
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { User } = useAuth();
-  const [loading, setLoading] = useState(false); // carga
-  const { enqueueSnackbar} = useSnackbar();
 
 
 
@@ -120,16 +164,6 @@ const DatosFisicos = () => {
                         onChange={(e) => setInformacion({ ...informacion, weight: e.target.value })}
                     />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="Altura"
-                        fullWidth
-                        variant="outlined"
-                        value={informacion.height}
-                        onChange={(e) => setInformacion({ ...informacion, height: e.target.value })}
-                    />
-                    </Grid>
-        
                     {/* Columna 2 */}
                     <Grid item xs={12} sm={6}>
                     <TextField
@@ -147,7 +181,7 @@ const DatosFisicos = () => {
                         fullWidth
                         variant="outlined"
                         value={informacion.legs}
-                        onChange={(e) => setInformacion({ ...informacion, legs :target.value })}
+                        onChange={(e) => setInformacion({ ...informacion, legs :e.target.value })}
                     />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -189,8 +223,10 @@ const DatosFisicos = () => {
                             padding: "   10px 45px", 
                             fontSize: "0.975rem", 
                         }}
+                        onClick={handleUpdate}
+                        disabled={loading}
                         >
-                        Guardar Cambios
+                        {loading ? "Guardando..." : "Guardar Cambios"}
                         </Button>
                     </Box>
                 </Stack>

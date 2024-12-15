@@ -27,7 +27,6 @@ function CompleteForm() {
     const [errorMsg, setErrorMsg] = useState("");
     const { control, handleSubmit, reset, register, formState: { errors } } = useForm();
 
-
     const onSubmit = async (data) => {
       const parsedHeight = parseFloat(height);
       
@@ -58,7 +57,7 @@ function CompleteForm() {
         reset(); 
         
       } catch (error) {
-        enqueueSnackbar('Error al enviar los datos', { variant: 'success'});
+        enqueueSnackbar('Error al enviar los datos', { variant: 'error'});
         console.error('Error al enviar los datos:', error); 
       }
     };
