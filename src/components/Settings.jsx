@@ -4,6 +4,7 @@ import { PowerSettingsNew as PowerIcon } from '@mui/icons-material';
 import { Refresh as RefreshIcon } from '@mui/icons-material'; 
 import DeactivateAccount from '../components/DeactivateAccount';
 import { useNavigate } from 'react-router-dom'; 
+import { useAuth } from "../context/authContext";
 
 const CommonButton = styled(Button)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -24,10 +25,12 @@ const CommonButton = styled(Button)(({ theme }) => ({
 const Settings = () => {
   const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
   const navigate = useNavigate();
+  const { User, typeUser } = useAuth();
 
   const handleOpenDeactivateModal = () => {
     setOpenDeactivateModal(true);
   };
+
 
   const ActualizarInfo = () => {
     navigate('/ActualizarInfo'); 
@@ -36,8 +39,6 @@ const Settings = () => {
   const DatosFisicos = () => {
     navigate('/DatosFisicos'); 
   };
-
-
 
   return (
     <>
@@ -66,37 +67,41 @@ const Settings = () => {
             marginBottom: '20px',
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh',  marginBottom: 5}}>
-          <CommonButton
-              startIcon={<RefreshIcon sx={{ fontSize: 20 }} />}
-            variant="contained"
-            color="primary"
-            sx={{
-              width: '400px',
-              textOverflow: 'ellipsis',
-              padding: '10px 20px',
-            }}
-            onClick={ActualizarInfo}
-          >
-            Actualizar Datos 
-          </CommonButton>
-          </Box>
+         {typeUser === "cliente" && (
+            <>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh', marginBottom: 5 }}>
+                <CommonButton
+                  startIcon={<RefreshIcon sx={{ fontSize: 20 }} />}
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    width: '400px',
+                    textOverflow: 'ellipsis',
+                    padding: '10px 20px',
+                  }}
+                  onClick={ActualizarInfo}
+                >
+                  Actualizar Datos
+                </CommonButton>
+              </Box>
 
-         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh',  marginBottom: 5}}>
-          <CommonButton
-              startIcon={<RefreshIcon sx={{ fontSize: 20 }} />}
-            variant="contained"
-            color="primary"
-            sx={{
-              width: '400px',
-              textOverflow: 'ellipsis',
-              padding: '10px 20px',
-            }}
-          onClick={DatosFisicos}
-          >
-            Actualizar datos físicos
-          </CommonButton>
-          </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh', marginBottom: 5 }}>
+                <CommonButton
+                  startIcon={<RefreshIcon sx={{ fontSize: 20 }} />}
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    width: '400px',
+                    textOverflow: 'ellipsis',
+                    padding: '10px 20px',
+                  }}
+                  onClick={DatosFisicos}
+                >
+                  Actualizar datos físicos
+                </CommonButton>
+              </Box>
+            </>
+          )}
 
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '5vh' }}>
             <CommonButton
@@ -113,6 +118,7 @@ const Settings = () => {
           </Box>
         </Stack>
       </Stack>
+
       <DeactivateAccount open={openDeactivateModal} handleClose={() => setOpenDeactivateModal(false)} />
     </>
   );

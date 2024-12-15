@@ -16,12 +16,14 @@ import { motion } from "framer-motion";
 import Logo from "../../assets/images/Logo1.png";
 import { TraerUsuarios, DesactivarUser } from "../../api/Ejericios";
 import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 function UserState() {
   const [selectedType, setSelectedType] = useState("coach");
   const [userList, setUserList] = useState([]);
   const [changedUsers, setChangedUsers] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
 
   const handleTypeChange = (event, newType) => {
