@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "../../context/authContext"; 
 import {
   Box,
   Button,
@@ -37,8 +38,10 @@ function CrearDieta() {
     setForm({ ...form, [name]: value });
   };
 
+  const {additionalData} = useAuth();
+
   const handleSubmit = async () => {
-    const nutritionistId = 1; // Este es el ID que se agrega automáticamente y no se muestra en el formulario
+    const nutritionistId = additionalData.id; // Este es el ID que se agrega automáticamente y no se muestra en el formulario
 
     // Creando el objeto para enviar
     const dietData = {

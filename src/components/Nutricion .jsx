@@ -203,8 +203,8 @@ function NutritionSection() {
             >
               <CardMedia
                 component="img"
-                height="200"
-                image="https://via.placeholder.com/400x200"
+                height="500"
+                image="https://media.istockphoto.com/id/1386398433/es/foto/pechuga-de-pollo-a-la-plancha-y-ensalada-de-verduras-frescas-de-tomate-aguacate-lechuga-y.jpg?s=612x612&w=0&k=20&c=nBnynUOaYwc_xvXITXHG5GrpwwzJeOivQwzICmxpbvg="
                 alt="Receta"
               />
               <CardContent>
@@ -232,8 +232,8 @@ function NutritionSection() {
             >
               <CardMedia
                 component="img"
-                height="200"
-                image="https://via.placeholder.com/400x200"
+                height="500"
+                image="https://www.ingredion.com/content/dam/ingredion/2022/images/global/nutrition-health-and-wellness/Nutrition-VITESSENCEpea-isolates-400x200.jpg"
                 alt="Receta"
               />
               <CardContent>
