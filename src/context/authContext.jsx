@@ -53,6 +53,13 @@ export const AuthProvider = ({ children }) => {
           setIsVerified(res.data.user.infoClienteVerified);
           setisFirstLogin(res.data.infoClientRegistered);
           const storedAdditionalData = localStorage.getItem("additionalData");
+           
+        //Esto
+          const storedTypeUser = localStorage.getItem('typeUser');
+          if (storedTypeUser) {
+            setTypeUser(storedTypeUser);
+          }
+
           if (storedAdditionalData) {
             setAdittionalData(JSON.parse(storedAdditionalData));
           }
@@ -78,6 +85,8 @@ export const AuthProvider = ({ children }) => {
         "additionalData",
         JSON.stringify(response.data.user.additionalData)
       );
+
+      localStorage.setItem('typeUser', response.data.user.userType); 
       console.log("informacioAdicional", response.data.user.additionalData);
       setIsAuthenticated(true);
       setIsVerified(response.data.user.infoClienteVerified);

@@ -7,7 +7,7 @@ export const obtenerDatosRequest = (id) => instance.get(`/client/ByUser/${id}`,)
 //Editar informacion personal
 export const actualizarDatosRequest  = (informacion) => {  
   const token = Cookies.get('token');
-  return instance.patch(    
+  return instance.put(    
     `/client/edit_perfil_client`, 
     informacion,{
     headers: {

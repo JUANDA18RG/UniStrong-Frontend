@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import axios from "axios"; // Importar axios para hacer la solicitud HTTP
 
 const PageValidacion = () => {
-  const { User } = useAuth(); // Obtener el usuario 
+  const { User } = useAuth(); // Obtener el usuario
   const [loading, setLoading] = useState(false); // Para controlar el estado de la solicitud
   const [message, setMessage] = useState(""); // Para mostrar mensajes de éxito o error
   const [verified, setVerified] = useState(false); // Para saber si el código fue verificado

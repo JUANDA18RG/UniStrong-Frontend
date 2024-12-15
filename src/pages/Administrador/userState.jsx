@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
   Card,
   Typography,
-  Grid,
   ToggleButton,
   ToggleButtonGroup,
   List,
@@ -13,20 +12,19 @@ import {
   Switch,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom"; 
-import Logo from "../../assets/images/Logo1.png"; // Asegúrate de tener esta imagen en tu proyecto
 
-const usuarios = [
-  { id: 1, name: "Juan", type: "Entrenador", active: true },
-  { id: 2, name: "Maria", type: "Nutriólogo", active: false },
-  { id: 3, name: "Pedro", type: "Contador", active: true },
-  { id: 4, name: "Ana", type: "Entrenador", active: false },
-];
+import Logo from "../../assets/images/Logo1.png";
+import { TraerUsuarios, DesactivarUser } from "../../api/Ejericios";
+import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 function UserState() {
+  const [selectedType, setSelectedType] = useState("coach");
+  const [userList, setUserList] = useState([]);
+  const [changedUsers, setChangedUsers] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [selectedType, setSelectedType] = useState("Entrenador");
-  const [userList, setUserList] = useState(usuarios);
+
 
   const handleTypeChange = (event, newType) => {
     if (newType !== null) {
@@ -36,13 +34,65 @@ function UserState() {
 
   const handleToggleActive = (id) => {
     setUserList((prevList) =>
-      prevList.map((user) =>
-        user.id === id ? { ...user, active: !user.active } : user
-      )
+      prevList.map((user) => {
+        if (user.id === id) {
+          const updatedUser = { ...user, state: !user.state };
+          const userIndex = changedUsers.findIndex(
+            (u) => u.email === user.email
+          );
+          if (userIndex === -1) {
+            setChangedUsers((prev) => [
+              ...prev,
+              { email: user.email, state: updatedUser.state },
+            ]);
+          } else {
+            const updatedChangedUsers = [...changedUsers];
+            updatedChangedUsers[userIndex].state = updatedUser.state;
+            setChangedUsers(updatedChangedUsers);
+          }
+          return updatedUser;
+        }
+        return user;
+      })
     );
   };
 
-  const filteredUsers = userList.filter((user) => user.type === selectedType);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await TraerUsuarios();
+        console.log(response.data);
+        setUserList(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  const filteredUsers = userList.filter(
+    (user) => user.userType === selectedType
+  );
+
+  const handleSaveChanges = async () => {
+    try {
+      const response = await DesactivarUser({ emails: changedUsers });
+      console.log("response", response);
+      console.log("Usuarios enviados:", changedUsers);
+      if (response.status === 200) {
+        enqueueSnackbar("Usuarios actualizados correctamente", {
+          variant: "success",
+        });
+        console.log("Usuarios actualizados correctamente");
+        setChangedUsers([]);
+      }
+    } catch (error) {
+      console.log("Error al enviar usuarios:", error);
+      enqueueSnackbar("Error al actualizar usuarios", {
+        variant: "error",
+      });
+    }
+  };
 
   return (
     <Box
@@ -130,7 +180,7 @@ function UserState() {
             sx={{ mb: 4 }}
           >
             <ToggleButton
-              value="Entrenador"
+              value="coach"
               sx={{
                 "&.Mui-selected": {
                   backgroundColor: "redRYB.main",
@@ -144,7 +194,7 @@ function UserState() {
               Entrenador
             </ToggleButton>
             <ToggleButton
-              value="Nutriólogo"
+              value="nutriologo"
               sx={{
                 "&.Mui-selected": {
                   backgroundColor: "redRYB.main",
@@ -158,7 +208,7 @@ function UserState() {
               Nutriólogo
             </ToggleButton>
             <ToggleButton
-              value="Contador"
+              value="cliente"
               sx={{
                 "&.Mui-selected": {
                   backgroundColor: "redRYB.main",
@@ -169,7 +219,7 @@ function UserState() {
                 },
               }}
             >
-              Contador
+              Cliente
             </ToggleButton>
           </ToggleButtonGroup>
           <Typography variant="h6" sx={{ mb: 2 }}>
@@ -181,9 +231,9 @@ function UserState() {
                 key={user.id}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                <ListItemText primary={user.name} />
+                <ListItemText primary={user.email} />
                 <Switch
-                  checked={user.active}
+                  checked={user.state}
                   onChange={() => handleToggleActive(user.id)}
                   sx={{
                     "& .MuiSwitch-switchBase.Mui-checked": {
@@ -200,6 +250,7 @@ function UserState() {
           <Button
             variant="contained"
             fullWidth
+            onClick={handleSaveChanges}
             sx={{
               backgroundColor: "redRYB.main",
               "&:hover": {
