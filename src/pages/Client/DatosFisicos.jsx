@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TextField, Button, Typography, Stack, Box, Grid } from "@mui/material";
+import { TextField, Button, Typography, Stack, Box, Grid, Fab, Menu, MenuItem, CircularProgress, Snackbar, Alert } from "@mui/material";
+import { PictureAsPdf } from "@mui/icons-material";
+import { useAuth } from "../../context/authContext";
+import { sendPdfByEmail } from "../../api/generarPdf";
+import { useSnackbar } from "notistack";
+
 
 const DatosFisicos = () => {
-   const [informacion, setInformacion] = useState({
+  const [informacion, setInformacion] = useState({
       weight:"",
       height: "",
       waist:"",
@@ -12,9 +17,48 @@ const DatosFisicos = () => {
       chest:"",
       glutes:"",
     });
-  
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const { User } = useAuth();
+  const [loading, setLoading] = useState(false); // carga
+  const { enqueueSnackbar} = useSnackbar();
+
+
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleGeneratePdf = () => {
+    const url = `http://localhost:3001/client/get-pdf-characteristics/${User.id}`; // Reemplaza con la URL que deseas abrir
+    window.open(url, "_blank");
+    handleClose();
+  };
+
+  const handleSendPdfByEmail = async () => {
+    setLoading(true);
+    try{
+      const response = await sendPdfByEmail(User.id);
+      if(response?.status === 200){
+        enqueueSnackbar("PDF enviado con éxito", { variant: "success" });
+      }else{
+        enqueueSnackbar("Error al enviar PDF", { variant: "error" });
+      }
+      handleClose();
+
+    }catch(error){
+      console.error("Error al enviar Pdf: ", error);
+      enqueueSnackbar("Error al enviar PDF", { variant: "error" });
+    }finally{
+      setLoading(false);
+    }
+  }
     // Aquí podrías agregar la lógica para traer la información del back-end
-  
+
     return (
       <Grid
          container
@@ -150,8 +194,52 @@ const DatosFisicos = () => {
                         </Button>
                     </Box>
                 </Stack>
-      </Box>
-      </Grid>
+            </Box>
+        </Grid>
+        {/** Botón flotante en la esquina inferior derecha */}
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{position: "fixed", bottom: 16,right: 16, width: 70, height: 70, backgroundColor: "red"}}
+          onClick={handleClick}
+        >
+          <PictureAsPdf sx={{ fontSize: 50}} />
+        </Fab>
+
+        <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem onClick={handleGeneratePdf}>Generar PDF</MenuItem>
+        <MenuItem onClick={handleSendPdfByEmail}>Enviar por correo</MenuItem>
+      </Menu>
+      {loading && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
       </Grid>
     );
   };
