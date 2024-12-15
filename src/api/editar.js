@@ -18,3 +18,9 @@ export const actualizarDatosRequest  = (informacion) => {
 };
 
 //Editar datos fisicos
+export const actualizarDatosFisicosRequest  = (iduser, informacion) => {
+  return instance.post(    
+    `/user/editar_medidas/${iduser}`, 
+    informacion
+  ); 
+};
