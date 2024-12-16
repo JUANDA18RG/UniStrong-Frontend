@@ -35,17 +35,20 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkLogin = async () => {
-      const cookies = Cookies.get();
-      if (!cookies.token) {
+      const token = Cookies.get('token');
+      console.log("Cookies de authContext:", token);
+      if (!token) {
         setIsAuthenticated(false);
         setLoading(false);
         return;
       }
       try {
-        const res = await verifyTokenRequest(cookies.token);
+        const res = await verifyTokenRequest(token);
+        console.log("esta en el try");
         if (!res.data) {
           setShowModal(true);
           setIsAuthenticated(false);
+          console.log("remueve el token");
           Cookies.remove("token");
         } else {
           setUser(res.data.user);

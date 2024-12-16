@@ -25,6 +25,7 @@ export const deactivateAccountRequest = (password) => {
 //Completar formulario, primera vez que se loguea
 export const completarFormRequest = (formdata) => {  
   const token = Cookies.get('token');
+  console.log("Envio de token: ",token);
   return instance.put(    
     `/client/fill_client_fields`, 
     formdata,{

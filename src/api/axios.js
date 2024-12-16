@@ -5,7 +5,7 @@ const Ruta = import.meta.env.VITE_REACT_APP_RAPID_API_KEY
 const Hots = import.meta.env.VITE_REACT_APP_RAPID_API_HOST
 
 const instance = axios.create({
-    baseURL: "http://localhost:3001",
+    baseURL: "http://54.165.21.175:3001",
     withCredentials: true,
 });
 
